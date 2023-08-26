@@ -1,7 +1,7 @@
 import express from "express";
 import { getCategories } from "../../controllers/categories-controller.js";
-import { ctrlWrapper } from "../../decorators/ctrlWrapper.js";
+import { ctrlWrapper } from "../../decorators/index.js";
 
-export const categoryRouter = express.Router();
+export const categoriesRouter = express.Router();
 
-categoryRouter.get("/", ctrlWrapper(getCategories));
+categoriesRouter.get("/", ctrlWrapper(getCategories));
