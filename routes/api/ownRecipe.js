@@ -9,5 +9,4 @@ router.get("/",) // get all recipe
 
 router.post("/") // add new recipe
 
-router.delete("/",
-)
+router.delete("/",) //delete recipe
