@@ -4,6 +4,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 
 import authRouter from "./routes/api/authRouter.js";
+import recipeRouter from "./routes/api/ownRecipe.js";
 
 export const app = express();
 dotenv.config();
@@ -15,15 +16,13 @@ app.use(express.json());
 app.use(express.static("public"));
 
 app.use("/api/auth", authRouter);
+app.use("/recipe", recipeRouter);
 
 app.use((req, res) => {
 	res.status(404).json({ message: "Not found" });
 });
-//dsadsadsadsa
 
-sa / d / sad / sa / dsadsa
 
-//dsadsadsadsad
 app.use((err, req, res, next) => {
 	const { status = 500, message = "Server error" } = err;
 	res.status(status).json({ message });

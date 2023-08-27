@@ -1,12 +1,17 @@
 import express from "express"
-import { authenticate } from "../../middlewares"
+import authenticate from "../../middlewares/authenticate.js"
+import recipeControllers from "../../controllers/recipe-controller.js"
+import { isEmptyBody, isValidOwnRecipeId, validateBody } from "../../middlewares/index.js"
+import recipeSchemas from "../../schemas/recipe-schemas.js"
 
-const router = express.Router()
+const recipeRouter = express.Router()
 
-// router.use(authenticate)
+recipeRouter.use(authenticate)
 
-router.get("/",) // get all recipe
+recipeRouter.post("/", isEmptyBody, validateBody(recipeSchemas.addRecipeSchema), recipeControllers.addRecipeControllers) //add new recipe
 
-router.post("/") // add new recipe
+recipeRouter.get("/", recipeControllers.getRecipesByUserIdController) // get all recipe
 
-router.delete("/",) //delete recipe
+recipeRouter.delete("/:recipeId", isValidOwnRecipeId, recipeControllers.deleteOwnRecipeById) //delete recipe
+
+export default recipeRouter
