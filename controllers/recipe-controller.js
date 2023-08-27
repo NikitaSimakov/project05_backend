@@ -36,7 +36,7 @@ const addRecipeControllers = async (req, res, next) => {
 const getRecipesByUserIdController = async (req, res) => {
 	const { _id: creatorId } = req.user;
 	const recipes = await Recipe.find({ creatorId })
-	res.status(201).json(recipes)
+	res.status(200).json(recipes)
 }
 
 const deleteOwnRecipeById = async (req, res, next) => {
