@@ -1,12 +1,6 @@
 import { Schema, model } from "mongoose";
 import { handleSaveError, handleUpdateValidate } from "./hooks.js";
 
-const favoriteInSchema = new Schema({
-	userId: {
-		type: String
-	}
-}, { _id: false })
-
 const ingredientsSchema = new Schema({
 	title: {
 		type: String,
@@ -53,7 +47,9 @@ const recipeSchema = new Schema({
 		type: String,
 		required: [true, "Add user id!"]
 	},
-	favoriteIn: [favoriteInSchema],
+	photoUrl: {
+		type: String
+	},
 	ingredients: [ingredientsSchema],
 }, { versionKey: false, timestamps: true })
 
