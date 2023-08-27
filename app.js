@@ -18,7 +18,7 @@ app.use(express.json());
 app.use(express.static("public"));
 
 app.use("/api/auth", authRouter);
-app.use("/recipe", ownRecipeRouter);
+app.use("/api/recipe", ownRecipeRouter);
 app.use("/api/recipes", recipesRouter);
 app.use("/api/glass", glassRouter);
 
