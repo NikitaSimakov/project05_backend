@@ -1,10 +1,11 @@
-import { Category } from "../models/category.js";
+import { HttpError } from "../helpers/HttpError.js";
 import { Recipe } from "../models/recipes.js";
 
 export const getRecipeById = async (req, res) => {
   const { id: _id } = req.params;
   const recipe = await Recipe.findById(_id);
   console.log("getbyid", _id);
+  if (!recipe) throw HttpError(404, `Recipe with Id: ${_id} not found`);
   res.json(recipe);
 };
 
@@ -24,31 +25,17 @@ export const getRecipesForMainPage = async (req, res) => {
   res.json(response);
 };
 
-// export const getRecipesByCategory = async (req, res) => {
-//   const { category: id } = req.params;
-//   const { page = 1 } = req.query;
-//   const limit = 3;
-//   const skip = (page - 1) * limit;
-//   const newCat = await Category.findById(id);
-//   console.log(newCat);
-//   // let category =
-//   //   lowerCaseCategory[0].toUpperCase() + lowerCaseCategory.slice(1);
-//   const recipesByCategory = await Recipe.find(
-//     { category: newCat.category },
-//     "",
-//     {
-//       skip,
-//       limit,
-//     }
-//   );
-//   res.json(recipesByCategory);
-// };
-
 export const getRecipesByCategory = async (req, res, next) => {
   const { category } = req.params;
-  // const obj = await Category.findById(id);
-  // const [_, __, { category }] = Object.values(obj);
-  console.log("cat", category);
-  const recipesByCategory = await Recipe.find({ category });
+  const { page = 1, limit = 8 } = req.query;
+
+  const skip = (page - 1) * limit;
+
+  const recipesByCategory = await Recipe.find({ category }, "", {
+    skip,
+    limit,
+  });
+  if (!recipesByCategory[0])
+    throw HttpError(404, `Category ${category} not found`);
   res.json(recipesByCategory);
 };
