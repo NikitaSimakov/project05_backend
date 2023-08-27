@@ -1,10 +1,10 @@
 import express from "express";
 
-import authController from"../../controllers/auth-controller.js";
+import authController from "../../controllers/auth-controller.js";
 
 import userSchemas from "../../schemas/user-schemas.js";
 
-import {validateBody, authenticate, upload} from "../../middlewares/index.js";
+import { validateBody, authenticate, upload } from "../../middlewares/index.js";
 
 const authRouter = express.Router();
 
@@ -14,7 +14,7 @@ authRouter.post("/login", validateBody(userSchemas.loginSchema, "Incorrectly fil
 
 authRouter.get("/:id", authenticate, authController.getUser);
 
-authRouter.patch("/update", authenticate, upload.single("avatar"), validateBody(userSchemas.updateSchema, "Sorry, update failed your profile."),  authController.updateUser);
+authRouter.patch("/update", authenticate, upload.single("avatar"), validateBody(userSchemas.updateSchema, "Sorry, update failed your profile."), authController.updateUser);
 
 authRouter.post("/logout", authenticate, authController.logout);
 
