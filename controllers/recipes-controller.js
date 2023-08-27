@@ -29,8 +29,8 @@ export const getRecipesForMainPage = async (req, res) => {
 };
 
 export const getRecipesByCategory = async (req, res, next) => {
-  const { category } = req.params;
   const { page = 1, limit = 8 } = req.query;
+  const category = `${req.params.category}${req.params["0"]}`;
 
   const skip = (page - 1) * limit;
 

@@ -20,4 +20,4 @@ recipesRouter.get(
   ctrlWrapper(getRecipeById)
 );
 
-recipesRouter.get("/:category", ctrlWrapper(getRecipesByCategory));
+recipesRouter.get("/:category*", ctrlWrapper(getRecipesByCategory));
