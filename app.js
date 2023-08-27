@@ -4,7 +4,9 @@ import cors from "cors";
 import dotenv from "dotenv";
 
 import authRouter from "./routes/api/authRouter.js";
-import recipeRouter from "./routes/api/ownRecipe.js";
+import ownRecipeRouter from "./routes/api/ownRecipe.js";
+import { recipesRouter } from "./routes/api/recipesRouter.js";
+import { glassRouter } from "./routes/api/glassesRouter.js";
 
 export const app = express();
 dotenv.config();
@@ -16,7 +18,9 @@ app.use(express.json());
 app.use(express.static("public"));
 
 app.use("/api/auth", authRouter);
-app.use("/recipe", recipeRouter);
+app.use("/recipe", ownRecipeRouter);
+app.use("/api/recipes", recipesRouter);
+app.use("/api/glass", glassRouter);
 
 app.use((req, res) => {
 	res.status(404).json({ message: "Not found" });
