@@ -4,14 +4,14 @@ import recipeControllers from "../../controllers/recipe-controller.js"
 import { isEmptyBody, isValidOwnRecipeId, upload, validateBody } from "../../middlewares/index.js"
 import recipeSchemas from "../../schemas/recipe-schemas.js"
 
-const recipeRouter = express.Router()
+const ownRecipeRouter = express.Router()
 
-recipeRouter.use(authenticate)
+ownRecipeRouter.use(authenticate)
 
-recipeRouter.post("/", upload.single("recipePhoto"), isEmptyBody, validateBody(recipeSchemas.addRecipeSchema), recipeControllers.addRecipeControllers) //add new recipe
+ownRecipeRouter.post("/", upload.single("recipePhoto"), isEmptyBody, validateBody(recipeSchemas.addRecipeSchema), recipeControllers.addRecipeControllers) //add new recipe
 
-recipeRouter.get("/", recipeControllers.getRecipesByUserIdController) // get all recipe
+ownRecipeRouter.get("/", recipeControllers.getRecipesByUserIdController) // get all recipe
 
-recipeRouter.delete("/:recipeId", isValidOwnRecipeId, recipeControllers.deleteOwnRecipeById) //delete recipe
+ownRecipeRouter.delete("/:recipeId", isValidOwnRecipeId, recipeControllers.deleteOwnRecipeById) //delete recipe
 
-export default recipeRouter
+export default ownRecipeRouter
