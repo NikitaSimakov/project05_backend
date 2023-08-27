@@ -1,4 +1,4 @@
-import { HttpError } from "../helpers/HttpError.js";
+import HttpError from "../helpers/HttpError.js";
 import { Recipe } from "../models/recipes.js";
 
 export const getRecipeById = async (req, res) => {
@@ -12,7 +12,10 @@ export const getRecipeById = async (req, res) => {
 export const getRecipesForMainPage = async (req, res) => {
   const random = Math.floor(Math.random() * 20);
   const queryForCategory = async (category) => {
-    return await Recipe.find({ category }, "drink drinkThumb category")
+    return await Recipe.find(
+      { category },
+      "drink drinkThumb ingredients category "
+    )
       .limit(3)
       .skip(random);
   };

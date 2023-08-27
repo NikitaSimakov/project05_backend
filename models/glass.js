@@ -4,7 +4,7 @@ import { Schema, model } from "mongoose";
 
 const glassSchema = new Schema(
   {
-    glass: { type: String },
+    // glass: { type: String },
     // email: { type: String },
     // phone: { type: String },
     // favorite: { type: Boolean, default: false },
