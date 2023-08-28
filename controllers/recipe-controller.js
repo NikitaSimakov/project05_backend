@@ -44,9 +44,9 @@ const deleteOwnRecipeById = async (req, res, next) => {
 	if (userId !== creatorId) {
 		return next(HttpError(403, `You haven't permission for delete recipe with id: ${id}`))
 	}
-	const deletedREcipe = await OwnRecipe.findByIdAndDelete(id)
+	await OwnRecipe.findByIdAndDelete(id)
 
-	res.json(deletedREcipe)
+	res.status(200).json({ "message": "Deleted" })
 }
 
 
