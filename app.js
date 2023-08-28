@@ -10,6 +10,7 @@ import { recipesRouter } from "./routes/api/recipesRouter.js";
 import { glassRouter } from "./routes/api/glassesRouter.js";
 import favoriteRouter from "./routes/api/favoriteRouter.js";
 import ingredientsRouter from "./routes/api/ingredientsRouter.js";
+import popularRecipeRouter from "./routes/api/popularRecipeRouter.js";
 
 export const app = express();
 dotenv.config();
@@ -25,6 +26,7 @@ app.use("/api/own", ownRecipeRouter);
 app.use("/api/recipes", recipesRouter);
 app.use("/api/glass", glassRouter);
 app.use("/api/favorite", favoriteRouter)
+app.use("/api/popular-recipe", popularRecipeRouter)
 app.use("/api", ingredientsRouter);
 app.use("/api", cocktailsRouter);
 

@@ -1,6 +1,6 @@
 import HttpError from "../helpers/HttpError.js";
 import ctrlWrapper from "../helpers/ctrlWrapper.js";
-import { Recipe } from "../models/recipes.js";
+import Recipe from "../models/recipes.js";
 
 const addFavoriteController = async (req, res) => {
 	const { recipeId } = req.params
@@ -35,8 +35,34 @@ const deleteFromFavorites = async (req, res) => {
 	res.status(200).json({ "message": "Deleted" })
 }
 
+const getTopCocktails = async (req, res) => {
+	const pipeline = [
+		{
+			'$match': {
+				"usersId": { $exists: true }
+			}
+		},
+		{
+			$project: {
+				"drink": 1,
+				"instructions": 1,
+				"drinkThumb": 1,
+				"usersId": 1,
+				"users_count": { $size: "$usersId" }
+			}
+		},
+		{ $sort: { "users_count": -1 } }, {
+			'$limit': 4
+		}
+	]
+
+	const result = await Recipe.aggregate(pipeline);
+	res.json(result)
+}
+
 export default {
 	addFavoriteController: ctrlWrapper(addFavoriteController),
 	getFavoritesController: ctrlWrapper(getFavoritesController),
-	deleteFromFavorites: ctrlWrapper(deleteFromFavorites)
+	deleteFromFavorites: ctrlWrapper(deleteFromFavorites),
+	getTopCocktails: ctrlWrapper(getTopCocktails)
 }

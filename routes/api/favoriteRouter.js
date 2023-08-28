@@ -10,6 +10,8 @@ favoriteRouter.patch("/:recipeId", favoriteControllers.addFavoriteController);
 
 favoriteRouter.get("/", favoriteControllers.getFavoritesController);
 
-favoriteRouter.delete("/:recipeId", favoriteControllers.deleteFromFavorites)
+favoriteRouter.delete("/:recipeId", favoriteControllers.deleteFromFavorites);
+
+
 
 export default favoriteRouter
