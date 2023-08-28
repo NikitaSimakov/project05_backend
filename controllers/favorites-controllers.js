@@ -3,15 +3,15 @@ import ctrlWrapper from "../helpers/ctrlWrapper.js";
 import { Recipe } from "../models/recipes.js";
 
 const addFavoriteController = async (req, res) => {
-	const { id } = req.body
+	const { recipeId } = req.params
 	const userId = req.user._id.toString()
 
-	const user = await Recipe.findById(id)
+	const user = await Recipe.findById(recipeId)
 	if (user.usersId.includes(userId)) {
-		throw HttpError(400, `You added recipe with id: ${id} to favorite!`)
+		throw HttpError(400, `You added recipe with id: ${recipeId} to favorite!`)
 	}
 
-	const updatedRecipe = await Recipe.findByIdAndUpdate(id, {
+	const updatedRecipe = await Recipe.findByIdAndUpdate(recipeId, {
 		$push: { usersId: userId }
 	}, { new: true })
 	res.status(201).json(updatedRecipe)
