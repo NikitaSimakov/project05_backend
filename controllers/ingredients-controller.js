@@ -1,6 +1,12 @@
 import Cocktails from "../models/cocktails.js";
+import Ingredient from "../models/ingredient.js";
 
 import { HttpError, ctrlWrapper } from "../helpers/index.js";
+
+const getIngredientsList = async (req, res) => {
+  const ingredients = await Ingredient.find({});
+  res.json(ingredients);
+};
 
 const getRecipesByIngredients = async (req, res) => {
   const { keyword } = req.query;
@@ -40,4 +46,5 @@ const getRecipesByIngredients = async (req, res) => {
 
 export default {
   getRecipesBySearch: ctrlWrapper(getRecipesByIngredients),
+  getIngredientsList: ctrlWrapper(getIngredientsList),
 };

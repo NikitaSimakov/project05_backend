@@ -10,7 +10,7 @@ const getRecipesBySearch = async (req, res) => {
   const regex = new RegExp(keyword, "i");
 
   const cocktails = await Cocktails.find({
-     "ingredients.title": { $regex: regex } 
+    "ingredients.title": { $regex: regex },
   })
     .skip((pageNumber - 1) * pageSize)
     .limit(pageSize);
@@ -19,8 +19,8 @@ const getRecipesBySearch = async (req, res) => {
     throw HttpError(401, "Recipes not found");
   }
 
-  const totalCount = await Cocktails.countDocuments(
-      { "ingredients.title": { $regex: regex }
+  const totalCount = await Cocktails.countDocuments({
+    "ingredients.title": { $regex: regex },
   });
   const totalPages = Math.ceil(totalCount / pageSize);
 
