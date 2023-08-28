@@ -1,5 +1,5 @@
 import HttpError from "../helpers/HttpError.js";
-import { Recipe } from "../models/recipes.js";
+import Recipe from "../models/recipes.js";
 
 export const getRecipeById = async (req, res) => {
   const { id: _id } = req.params;
