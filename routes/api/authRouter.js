@@ -14,10 +14,10 @@ authRouter.post("/login", validateBody(userSchemas.loginSchema, "Incorrectly fil
 
 authRouter.get("/:id", authenticate, authController.getUser);
 
-authRouter.patch("/update", authenticate, upload.single("avatar"), validateBody(userSchemas.updateSchema, "Sorry, update failed your profile."), authController.updateUser);
+authRouter.patch("/update", authenticate, upload.single("avatar"), validateBody(userSchemas.updateSchema, "Sorry, update failed your profile"), authController.updateUser);
 
 authRouter.post("/logout", authenticate, authController.logout);
 
-authRouter.patch("/subscribe", validateBody(userSchemas.userEmailSchema, "Invalid email address"), authController.subscribe);
+authRouter.patch("/subscribe", authenticate, validateBody(userSchemas.userEmailSchema, "Invalid email address"), authController.subscribe);
 
 export default authRouter;
