@@ -29,10 +29,10 @@ const deleteFromFavorites = async (req, res) => {
 	const { recipeId } = req.params
 	const userId = req.user._id.toString()
 
-	const updatedRecipe = await Recipe.findByIdAndUpdate(recipeId, {
+	await Recipe.findByIdAndUpdate(recipeId, {
 		$pull: { usersId: userId }
 	})
-	res.status(200).json({ "message": "deleted" })
+	res.status(200).json({ "message": "Deleted" })
 }
 
 export default {
