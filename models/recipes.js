@@ -27,8 +27,7 @@ const ingredientsSchema = new Schema({
 const recipeSchema = new Schema(
 	{
 		drink: {
-			type: String,
-			required: true
+			type: String
 		},
 		drinkAlternate: { type: String, default: null },
 		tags: { type: String, default: null },
@@ -51,18 +50,6 @@ const recipeSchema = new Schema(
 		creatorId: String,
 		ingredients: [ingredientsSchema],
 		usersId: Array,
-
-		// drink: { type: String },
-		// category: { type: String },
-		// alcoholic: { type: String },
-		// glass: { type: String },
-		// instructions: { type: String },
-		// drinkThumb: { type: String },
-		// ingredients: { type: Array },
-		// owner: {
-		//   type: Schema.Types.ObjectId,
-		//   ref: "user",
-		// },
 	},
 	{ versionKey: false, timestamps: true }
 );
@@ -72,4 +59,5 @@ ingredientsSchema.post("save", handleSaveError)
 ingredientsSchema.post("findOneAndUpdate", handleSaveError)
 
 
-export const Recipe = model("cocktail", recipeSchema);
+const Recipe = model("cocktail", recipeSchema);
+export default Recipe;
