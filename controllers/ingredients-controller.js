@@ -1,40 +1,18 @@
-import Cocktails from "../models/cocktails.js";
-
-import { HttpError, ctrlWrapper } from "../helpers/index.js";
+import { ctrlWrapper, getCocktails } from "../helpers/index.js";
 
 const getRecipesByIngredients = async (req, res) => {
   const { keyword } = req.query;
-  const { pageNumber } = parseInt(req.query) || 1;
-  const { pageSize } = parseInt(req.query) || 9;
-
-  const regex = new RegExp(keyword, "i");
-
-  const cocktails = await Cocktails.find({
+  const filter = {
     $or: [
-      { drink: { $regex: regex } },
-      { "ingredients.title": { $regex: regex } },
+      { drink: { $regex: new RegExp(keyword, "i") } },
+      { "ingredients.title": { $regex: new RegExp(keyword, "i") } },
     ],
-  })
-    .skip((pageNumber - 1) * pageSize)
-    .limit(pageSize);
-
-  if (!cocktails) {
-    throw HttpError(401, "Recipes not found");
-  }
-
-  const totalCount = await Cocktails.countDocuments({
-    $or: [
-      { drink: { $regex: regex } },
-      { "ingredients.title": { $regex: regex } },
-    ],
-  });
-  const totalPages = Math.ceil(totalCount / pageSize);
-
+  };
+  const { pageNumber, pageSize } = req.query;
+  const result = await getCocktails(filter, pageNumber, pageSize);
   res.status(200).json({
-    cocktails,
-    totalPages,
+    ...result,
     currentPage: pageNumber,
-    totalCount,
   });
 };
 
