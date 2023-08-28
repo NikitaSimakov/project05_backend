@@ -5,28 +5,29 @@ import {
   getRecipesForMainPage,
   getRecipesByCategory,
 } from "../../controllers/recipes-controller.js";
-import { authenticate, isIdValid } from "../../middlewares/index.js";
+import {  isIdValid } from "../../middlewares/index.js";
+// authenticate,
 import { getCategories } from "../../controllers/categories-controller.js";
 
 export const recipesRouter = express.Router();
 
 recipesRouter.get(
   "/main-page",
-  authenticate,
+  // authenticate,
   ctrlWrapper(getRecipesForMainPage)
 );
 
-recipesRouter.get("/category-list", authenticate, ctrlWrapper(getCategories));
-
+recipesRouter.get("/category-list",  ctrlWrapper(getCategories));
+// authenticate,
 recipesRouter.get(
   "/:id([a-z0-9_-]{24})",
-  authenticate,
+  // authenticate,
   isIdValid,
   ctrlWrapper(getRecipeById)
 );
 
 recipesRouter.get(
   "/:category*",
-  authenticate,
+  // authenticate,
   ctrlWrapper(getRecipesByCategory)
 );
