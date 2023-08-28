@@ -128,12 +128,14 @@ const subscribe = async (req, res) => {
 		to: email,
 		subject: "Newsletter Subscribe",
 		html: `
+	<center>
       <div style="background-color: rgba(0, 0, 0, 0.9); color: #ffffff; padding: 20px;">
       <h1>Welcome to Our Newsletter!</h1>
       <p>Thank you for subscribing to our newsletter. Stay tuned for the latest updates and news.</p>
       <p style="font-weight: bold;">Best regards,</p>
       <p>Your Drink Master Team</p>
     </div>
+	</center>
     `,
 	};
 
