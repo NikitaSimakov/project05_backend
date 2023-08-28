@@ -7,6 +7,7 @@ import authRouter from "./routes/api/authRouter.js";
 import ownRecipeRouter from "./routes/api/ownRecipe.js";
 import { recipesRouter } from "./routes/api/recipesRouter.js";
 import { glassRouter } from "./routes/api/glassesRouter.js";
+import favoriteRouter from "./routes/api/favoriteRouter.js";
 
 export const app = express();
 dotenv.config();
@@ -21,6 +22,7 @@ app.use("/api/auth", authRouter);
 app.use("/api/own", ownRecipeRouter);
 app.use("/api/recipes", recipesRouter);
 app.use("/api/glass", glassRouter);
+app.use("/api/favorite", favoriteRouter)
 
 app.use((req, res) => {
 	res.status(404).json({ message: "Not found" });

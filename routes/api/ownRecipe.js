@@ -12,6 +12,6 @@ ownRecipeRouter.post("/", upload.single("recipePhoto"), isEmptyBody, validateBod
 
 ownRecipeRouter.get("/", recipeControllers.getRecipesByUserIdController) // get all recipe
 
-ownRecipeRouter.delete("/:recipeId", isValidOwnRecipeId, recipeControllers.deleteOwnRecipeById) //delete recipe
+ownRecipeRouter.delete("/:recipeId", recipeControllers.deleteOwnRecipeById) //delete recipe
 
 export default ownRecipeRouter

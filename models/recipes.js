@@ -50,6 +50,7 @@ const recipeSchema = new Schema(
 		describe: String,
 		creatorId: String,
 		ingredients: [ingredientsSchema],
+		usersId: Array,
 
 		// drink: { type: String },
 		// category: { type: String },
