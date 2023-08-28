@@ -6,6 +6,6 @@ import cocktailsController from "../../controllers/cocktails-controller.js";
 
 const ingredientsRouter = express.Router();
 
-ingredientsRouter.get("/ingredients", cocktailsController.getRecipesBySearch);
+ingredientsRouter.get("/ingredients",  cocktailsController.getRecipesBySearch);
 // authenticate,
 export default ingredientsRouter;
