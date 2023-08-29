@@ -1,51 +1,52 @@
 import HttpError from "../helpers/HttpError.js";
 import cloudinary from "../helpers/cloudinary.js";
 import ctrlWrapper from "../helpers/ctrlWrapper.js";
-import { Recipe } from "../models/recipe.js";
+import { OwnRecipe } from "../models/ownRecipes.js";
 import fs from "fs/promises"
 
 
 
 const addRecipeControllers = async (req, res, next) => {
-	let photoUrl = "";
+	let drinkThumb = "";
 	if (req.file) {
 		const { path: oldPath } = req.file;
 
 		const { url: recipeUrl } = await cloudinary.uploader.upload(oldPath, {
 			folder: "ownRecipesPhoto",
-			transformation: [{ width: 400, height: 400, crop: "fill" }],
+			transformation: [{ width: 700, height: 700, crop: "fill" }],
 		});
-		photoUrl = recipeUrl;
+		drinkThumb = recipeUrl;
 
 		await fs.unlink(oldPath);
 	}
 
 	const { _id: creatorId } = req.user;
-	const { name } = req.body
 
-	const recipeIsSameNameInBase = await Recipe.findOne({ name })
-
-	if (recipeIsSameNameInBase) {
-		return next(HttpError(409, `You already have recipe with name: ${name}`))
-	}
-
-	const recipe = await Recipe.create({ ...req.body, creatorId, photoUrl })
+	const recipe = await OwnRecipe.create({ ...req.body, creatorId, drinkThumb })
 	res.status(201).json(recipe)
 }
 
 const getRecipesByUserIdController = async (req, res) => {
 	const { _id: creatorId } = req.user;
-	const recipes = await Recipe.find({ creatorId })
+	const recipes = await OwnRecipe.find({ creatorId })
 	res.status(200).json(recipes)
 }
 
 const deleteOwnRecipeById = async (req, res, next) => {
 	const { recipeId: id } = req.params;
-	const deletedRecipe = await Recipe.findByIdAndRemove(id)
-	if (!deletedRecipe) {
+	const recipe = await OwnRecipe.findById(id)
+	const userId = req.user._id.toString()
+
+	if (!recipe) {
 		return next(HttpError(404, `You haven't recipe with id: ${id}`))
 	}
-	res.json(deletedRecipe)
+	const { creatorId } = recipe;
+	if (userId !== creatorId) {
+		return next(HttpError(403, `You haven't permission for delete recipe with id: ${id}`))
+	}
+	await OwnRecipe.findByIdAndDelete(id)
+
+	res.status(200).json({ "message": "Deleted" })
 }
 
 
