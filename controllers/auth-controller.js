@@ -72,13 +72,25 @@ const logIn = async (req, res) => {
 };
 
 const getUser = async (req, res) => {
-	const { id } = req.body;
-	const user = await User.findOne({ id });
+	const {id, email} = req.user;
+
+	let user;
+
+      if (email.includes("@")) {
+        user = await User.findOne({ email: email });
+      } else {
+        user = await User.findById(id);
+      }
+
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      res.status(200).json({ user });
+
 	if (!user) {
 		throw HttpError(401, "User not found");
 	}
-
-	res.status(200).json({ user });
 };
 
 const updateUser = async (req, res) => {
@@ -95,7 +107,7 @@ const updateUser = async (req, res) => {
 
 		const { url: avatarURL } = await cloudinary.uploader.upload(oldPath, {
 			folder: "avatars",
-			transformation: [{ width: 250, height: 250 }],
+			transformation: [{ width: 250, height: 250, crop: "fill" }],
 		});
 		const updatedUserAvatar = await User.findByIdAndUpdate(_id, { avatarURL });
 
