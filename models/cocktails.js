@@ -13,6 +13,10 @@ const cocktailsSchema = new Schema(
       type: String,
       required: true,
     },
+    category: {
+      type: String,
+      required: true,
+    },
     ingredients: [ingredientSchema],
   },
   { versionKey: false, timestamps: true }
