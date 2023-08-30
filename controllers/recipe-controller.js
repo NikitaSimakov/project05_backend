@@ -1,7 +1,7 @@
 import HttpError from "../helpers/HttpError.js";
 import cloudinary from "../helpers/cloudinary.js";
 import ctrlWrapper from "../helpers/ctrlWrapper.js";
-import { OwnRecipe } from "../models/ownRecipes.js";
+import Recipe from "../models/recipes.js";
 import fs from "fs/promises"
 
 
@@ -22,19 +22,19 @@ const addRecipeControllers = async (req, res, next) => {
 
 	const { _id: creatorId } = req.user;
 
-	const recipe = await OwnRecipe.create({ ...req.body, creatorId, drinkThumb })
+	const recipe = await Recipe.create({ ...req.body, creatorId, drinkThumb })
 	res.status(201).json(recipe)
 }
 
 const getRecipesByUserIdController = async (req, res) => {
 	const { _id: creatorId } = req.user;
-	const recipes = await OwnRecipe.find({ creatorId })
+	const recipes = await Recipe.find({ creatorId })
 	res.status(200).json(recipes)
 }
 
 const deleteOwnRecipeById = async (req, res, next) => {
 	const { recipeId: id } = req.params;
-	const recipe = await OwnRecipe.findById(id)
+	const recipe = await Recipe.findById(id)
 	const userId = req.user._id.toString()
 
 	if (!recipe) {
@@ -44,7 +44,7 @@ const deleteOwnRecipeById = async (req, res, next) => {
 	if (userId !== creatorId) {
 		return next(HttpError(403, `You haven't permission for delete recipe with id: ${id}`))
 	}
-	await OwnRecipe.findByIdAndDelete(id)
+	await Recipe.findByIdAndDelete(id)
 
 	res.status(200).json({ "message": "Deleted" })
 }
