@@ -8,6 +8,7 @@ import cocktailsRouter from "./routes/api/cocktailsRouter.js";
 import ownRecipeRouter from "./routes/api/ownRecipe.js";
 import { recipesRouter } from "./routes/api/recipesRouter.js";
 import { glassRouter } from "./routes/api/glassesRouter.js";
+import ingredientsRouter from "./routes/api/ingredientsRouter.js";
 import favoriteRouter from "./routes/api/favoriteRouter.js";
 import popularRecipeRouter from "./routes/api/popularRecipeRouter.js";
 
@@ -26,6 +27,7 @@ app.use("/api/recipes", recipesRouter);
 app.use("/api/glass", glassRouter);
 app.use("/api/favorite", favoriteRouter)
 app.use("/api/popular-recipe", popularRecipeRouter)
+app.use("/api/ingredients", ingredientsRouter);
 app.use("/api", cocktailsRouter);
 
 app.use((req, res) => {
