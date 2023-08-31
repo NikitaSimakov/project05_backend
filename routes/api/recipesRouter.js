@@ -17,8 +17,8 @@ recipesRouter.get(
   ctrlWrapper(getRecipesForMainPage)
 );
 
-recipesRouter.get("/category-list", authenticate, ctrlWrapper(getCategories));
-
+recipesRouter.get("/category-list",  ctrlWrapper(getCategories));
+// authenticate,
 recipesRouter.get(
   "/:id([a-z0-9_-]{24})",
   authenticate,
