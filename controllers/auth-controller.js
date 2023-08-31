@@ -20,7 +20,7 @@ const register = async (req, res) => {
 	const user = await User.findOne({ email });
 
 	if (user) {
-		throw HttpError(409, "Email in use");
+		throw HttpError(409, "Provided email already exists");
 	}
 
 	const hashPassword = await bcrypt.hash(password, 10);
@@ -49,12 +49,12 @@ const logIn = async (req, res) => {
 	const { email, password } = req.body;
 	const user = await User.findOne({ email });
 	if (!user) {
-		throw HttpError(401, "Email or password is wrong");
+		throw HttpError(401, "Email is wrong");
 	}
 
 	const passwordCompare = await bcrypt.compare(password, user.password);
 	if (!passwordCompare) {
-		throw HttpError(401, "Email or password is wrong");
+		throw HttpError(401, "Password is wrong");
 	}
 
 	const payload = {
@@ -87,10 +87,6 @@ const getUser = async (req, res) => {
       }
 
       res.status(200).json({ user });
-
-	if (!user) {
-		throw HttpError(401, "User not found");
-	}
 };
 
 const updateUser = async (req, res) => {
@@ -99,6 +95,10 @@ const updateUser = async (req, res) => {
 
 	if (name) {
 		const updatedUserName = await User.findByIdAndUpdate(_id, { name });
+
+		if (!updatedUserName) {
+			return res.status(401).json({ message: "Not authorized" });
+		  }
 
 		res.status(200).json({ user: updatedUserName });
 	}
@@ -110,6 +110,10 @@ const updateUser = async (req, res) => {
 			transformation: [{ width: 250, height: 250, crop: "fill" }],
 		});
 		const updatedUserAvatar = await User.findByIdAndUpdate(_id, { avatarURL });
+
+		if (!updatedUserAvatar) {
+			return res.status(401).json({ message: "Not authorized" });
+		  }
 
 		await fs.unlink(oldPath);
 		res.status(200).json({ user: updatedUserAvatar });
