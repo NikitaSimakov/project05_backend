@@ -13,7 +13,7 @@ export const recipesRouter = express.Router();
 
 recipesRouter.get(
   "/main-page",
-  authenticate,
+  // authenticate,
   ctrlWrapper(getRecipesForMainPage)
 );
 
@@ -28,6 +28,6 @@ recipesRouter.get(
 
 recipesRouter.get(
   "/:category*",
-  authenticate,
+  // authenticate,
   ctrlWrapper(getRecipesByCategory)
 );
