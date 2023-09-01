@@ -265,7 +265,7 @@
           }
         ],
         "responses": {
-          "201": {
+          "204": {
             "description": "Successful operation",
             "content": {
               "application/json": {
@@ -635,12 +635,18 @@
             "type": "string",
             "description": "User's avatar",
             "example": "//www.gravatar.com/avatar/395df683fb7c0f1aad22dbf40031517a?s=200&d=identicon"
-          }
+          },
+          "token": {
+            "type": "string",
+            "description": "User's token",
+            "format": "JWT"
+          }          
         },
         "example": {
           "name": "Aaron Barnes",
           "email": "aaron@gmail.com",
-          "avatarURL": "//www.gravatar.com/avatar/395df683fb7c0f1aad22dbf40031517a?s=200&d=identicon"
+          "avatarURL": "//www.gravatar.com/avatar/395df683fb7c0f1aad22dbf40031517a?s=200&d=identicon",
+          "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0ZWJlMjY0ZDJhZTdkYWJjYjViZTBkYiIsImlhdCI6MTY5MzQ2OTU0MiwiZXhwIjoxNjk1MjgzOTQyfQ.hcG4kTbunvFLj5_UoLe7tu9AK9wMX9BdkoSrA8oc97U"
         }
       },
       "LoginRequest": {
@@ -1218,6 +1224,7 @@
             }
           ]
         }
+      }
       },
       "securitySchemes": {
         "Bearer": {
@@ -1225,7 +1232,6 @@
           "scheme": "bearer",
           "bearerFormat": "JWT"
         }
-      }
     }
   }
 }
