@@ -122,10 +122,7 @@ const updateUser = async (req, res) => {
 
 const logout = async (req, res) => {
 	const { _id } = req.user;
-	const user = await User.findByIdAndUpdate(_id, { token: "" });
-	if (!user) {
-		throw HttpError(401, "Not authorized");
-	}
+	await User.findByIdAndUpdate(_id, { token: "" });
 
 	res.status(201).json({
 		message: "No Content",
