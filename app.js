@@ -2,6 +2,8 @@ import express from "express";
 import logger from "morgan";
 import cors from "cors";
 import dotenv from "dotenv";
+import swaggerUi from 'swagger-ui-express';
+import swaggerDocument from './swagger.json' assert { type: "json" };
 
 import authRouter from "./routes/api/authRouter.js";
 import cocktailsRouter from "./routes/api/cocktailsRouter.js";
@@ -29,6 +31,7 @@ app.use("/api/favorite", favoriteRouter)
 app.use("/api/popular-recipe", popularRecipeRouter)
 app.use("/api/ingredients", ingredientsRouter);
 app.use("/api", cocktailsRouter);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use((req, res) => {
 	res.status(404).json({ message: "Not found" });
