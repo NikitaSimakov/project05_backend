@@ -729,9 +729,179 @@
 									"properties": {
 										"message": {
 											"type": "string",
-											"description": "Success deleted"
+											"description": "Success deleted",
+											"example": "Deleted"
 										}
 									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Bad request (invalid request body)",
+						"content": {}
+					},
+					"401": {
+						"description": "Not authorized",
+						"content": {}
+					},
+					"404": {
+						"description": "Not valid ID",
+						"content": {}
+					}
+				}
+			}
+		},
+		"/favorite": {
+			"get": {
+				"tags": [
+					"Favorite"
+				],
+				"summary": "Receive all favorite recipes.",
+				"parameters": [],
+				"security": [
+					{
+						"Bearer": []
+					}
+				],
+				"responses": {
+					"201": {
+						"description": "Success",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/GetAllFavoriteResponse"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Bad request (invalid request body)",
+						"content": {}
+					},
+					"401": {
+						"description": "Not authorized",
+						"content": {}
+					}
+				}
+			}
+		},
+		"/favorite/:recipeId": {
+			"delete": {
+				"tags": [
+					"Favorite"
+				],
+				"summary": "Delete recipe from favorite",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "recipeId",
+						"required": true,
+						"type": "string",
+						"description": "Recipe`s id"
+					}
+				],
+				"security": [
+					{
+						"Bearer": []
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful operation",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string",
+											"description": "Success deleted",
+											"example": "Deleted"
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Bad request (invalid request body)",
+						"content": {}
+					},
+					"401": {
+						"description": "Not authorized",
+						"content": {}
+					},
+					"404": {
+						"description": "Not valid ID",
+						"content": {}
+					}
+				}
+			},
+			"patch": {
+				"tags": [
+					"Favorite"
+				],
+				"summary": "Add recipe to favorite",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "recipeId",
+						"required": true,
+						"type": "string",
+						"description": "Recipe`s id"
+					}
+				],
+				"security": [
+					{
+						"Bearer": []
+					}
+				],
+				"responses": {
+					"201": {
+						"description": "Success",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/GetAllFavoriteResponse"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Bad request (invalid request body)",
+						"content": {}
+					},
+					"401": {
+						"description": "Not authorized",
+						"content": {}
+					},
+					"404": {
+						"description": "Not valid ID",
+						"content": {}
+					}
+				}
+			}
+		},
+		"/popular-recipe": {
+			"get": {
+				"tags": [
+					"Popular-recipe"
+				],
+				"summary": "Return array with 4-th top recipes.",
+				"parameters": [],
+				"security": [
+					{
+						"Bearer": []
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Success",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/GetTopRecipes"
 								}
 							}
 						}
@@ -1370,6 +1540,13 @@
 			},
 			"AddRecipeRequest": {
 				"type": "object",
+				"required": [
+					"drink",
+					"category",
+					"glass",
+					"ingredients",
+					"instructions"
+				],
 				"properties": {
 					"drink": {
 						"type": "string",
@@ -1411,13 +1588,159 @@
 						"type": "string",
 						"description": "Information about cocktail"
 					},
-					"creatorId": {
-						"type": "string",
-						"description": "User`s id, whose create recipe"
-					},
 					"ingredients": {
 						"type": "array",
 						"description": "Array of object with cocktail ingredients"
+					},
+					"ownRecipesPhoto": {
+						"type": "string",
+						"format": "binary",
+						"description": "Recipe's image"
+					}
+				}
+			},
+			"GetAllFavoriteResponse": {
+				"type": "array",
+				"properties": {
+					"categoryName": {
+						"type": "object",
+						"description": "Object of favorite`s recipes",
+						"properties": {
+							"drink": {
+								"type": "string",
+								"description": "Name of cocktail"
+							},
+							"drinkAlternate": {
+								"type": "string"
+							},
+							"tags": {
+								"type": "string"
+							},
+							"video": {
+								"type": "string"
+							},
+							"category": {
+								"type": "string",
+								"description": "Name of cocktail category"
+							},
+							"IBA": {
+								"type": "string"
+							},
+							"alcoholic": {
+								"type": "string",
+								"description": "Type of cocktail"
+							},
+							"glass": {
+								"type": "string",
+								"description": "Type of glass"
+							},
+							"instructions": {
+								"type": "string",
+								"description": "Instructions how cooking cocktail"
+							},
+							"drinkThumb": {
+								"type": "string",
+								"description": "link to cocktail image"
+							},
+							"creatorId": {
+								"type": "string",
+								"description": "User`s id, whose create recipe"
+							},
+							"usersId": {
+								"type": "array",
+								"description": "Array of users id"
+							},
+							"_id": {
+								"type": "string",
+								"description": "Cocktail _id"
+							}
+						}
+					}
+				},
+				"example": [
+					{
+						"_id": {
+							"$oid": "64ef9548de36dea225953fb6"
+						},
+						"drink": "Custom_Quentin",
+						"drinkAlternate": null,
+						"tags": null,
+						"video": null,
+						"category": "Beer",
+						"IBA": null,
+						"alcoholic": null,
+						"glass": "Ordinary Drink",
+						"instructions": "Take and drink",
+						"drinkThumb": "http://res.cloudinary.com/dec1shvoo/image/upload/v1689167161/cocktails-v1/drinks/Quentin.jpg",
+						"describe": "My first cocktail",
+						"ingredients": [
+							{
+								"title": "Dark rum",
+								"measure": "1 1/2 oz ",
+								"ingredientThumb": "http://res.cloudinary.com/dec1shvoo/image/upload/v1689169605/cocktails-v1/ingredient/Dark%20rum.png",
+								"thumb-medium": "http://res.cloudinary.com/dec1shvoo/image/upload/v1689169605/cocktails-v1/ingredient/Dark%20rum-Medium.png",
+								"thumb-small": "http://res.cloudinary.com/dec1shvoo/image/upload/v1689169605/cocktails-v1/ingredient/Dark%20rum-Small.png"
+							},
+							{
+								"title": "Kahlua",
+								"measure": "1/2 oz ",
+								"ingredientThumb": "http://res.cloudinary.com/dec1shvoo/image/upload/v1689169605/cocktails-v1/ingredient/Kahlua.png",
+								"thumb-medium": "http://res.cloudinary.com/dec1shvoo/image/upload/v1689169605/cocktails-v1/ingredient/Kahlua-Medium.png",
+								"thumb-small": "http://res.cloudinary.com/dec1shvoo/image/upload/v1689169605/cocktails-v1/ingredient/Kahlua-Small.png"
+							}
+						],
+						"createdAt": {
+							"$date": "2023-08-30T19:15:20.088Z"
+						},
+						"updatedAt": {
+							"$date": "2023-08-30T20:48:58.679Z"
+						},
+						"usersId": [
+							"64eae6b73b8a2cf97c431fd7",
+							"64eb0a1d3fa4384dcb1f8fdf"
+						]
+					}
+				]
+			},
+			"PatchFavoriteResponse": {
+				"type": "object",
+				"description": "Object of favorite`s recipes",
+				"properties": {
+					"drink": {
+						"type": "string",
+						"description": "Name of cocktail"
+					},
+					"drinkAlternate": {
+						"type": "string"
+					},
+					"tags": {
+						"type": "string"
+					},
+					"video": {
+						"type": "string"
+					},
+					"category": {
+						"type": "string",
+						"description": "Name of cocktail category"
+					},
+					"IBA": {
+						"type": "string"
+					},
+					"alcoholic": {
+						"type": "string",
+						"description": "Type of cocktail"
+					},
+					"glass": {
+						"type": "string",
+						"description": "Type of glass"
+					},
+					"instructions": {
+						"type": "string",
+						"description": "Instructions how cooking cocktail"
+					},
+					"drinkThumb": {
+						"type": "string",
+						"description": "link to cocktail image"
 					},
 					"usersId": {
 						"type": "array",
@@ -1426,13 +1749,102 @@
 					"_id": {
 						"type": "string",
 						"description": "Cocktail _id"
-					},
-					"ownRecipesPhoto": {
-						"type": "string",
-						"format": "binary",
-						"description": "Recipe's image"
 					}
-				}
+				},
+				"example": [
+					{
+						"_id": {
+							"$oid": "64ef9548de36dea225953fb6"
+						},
+						"drink": "Custom_Quentin",
+						"drinkAlternate": null,
+						"tags": null,
+						"video": null,
+						"category": "Beer",
+						"IBA": null,
+						"alcoholic": null,
+						"glass": "Ordinary Drink",
+						"instructions": "Take and drink",
+						"drinkThumb": "http://res.cloudinary.com/dec1shvoo/image/upload/v1689167161/cocktails-v1/drinks/Quentin.jpg",
+						"describe": "My first cocktail",
+						"ingredients": [
+							{
+								"title": "Dark rum",
+								"measure": "1 1/2 oz ",
+								"ingredientThumb": "http://res.cloudinary.com/dec1shvoo/image/upload/v1689169605/cocktails-v1/ingredient/Dark%20rum.png",
+								"thumb-medium": "http://res.cloudinary.com/dec1shvoo/image/upload/v1689169605/cocktails-v1/ingredient/Dark%20rum-Medium.png",
+								"thumb-small": "http://res.cloudinary.com/dec1shvoo/image/upload/v1689169605/cocktails-v1/ingredient/Dark%20rum-Small.png"
+							},
+							{
+								"title": "Kahlua",
+								"measure": "1/2 oz ",
+								"ingredientThumb": "http://res.cloudinary.com/dec1shvoo/image/upload/v1689169605/cocktails-v1/ingredient/Kahlua.png",
+								"thumb-medium": "http://res.cloudinary.com/dec1shvoo/image/upload/v1689169605/cocktails-v1/ingredient/Kahlua-Medium.png",
+								"thumb-small": "http://res.cloudinary.com/dec1shvoo/image/upload/v1689169605/cocktails-v1/ingredient/Kahlua-Small.png"
+							}
+						],
+						"createdAt": {
+							"$date": "2023-08-30T19:15:20.088Z"
+						},
+						"updatedAt": {
+							"$date": "2023-08-30T20:48:58.679Z"
+						},
+						"usersId": [
+							"64eae6b73b8a2cf97c431fd7",
+							"64eb0a1d3fa4384dcb1f8fdf"
+						]
+					}
+				]
+			},
+			"GetTopRecipes": {
+				"type": "array",
+				"properties": {
+					"categoryName": {
+						"type": "object",
+						"description": "Object of top`s recipes",
+						"properties": {
+							"drink": {
+								"type": "string",
+								"description": "Name of cocktail"
+							},
+							"instructions": {
+								"type": "string",
+								"description": "Instructions how cooking cocktail"
+							},
+							"drinkThumb": {
+								"type": "string",
+								"description": "link to cocktail image"
+							},
+							"_id": {
+								"type": "string",
+								"description": "Cocktail _id"
+							},
+							"usersId": {
+								"type": "array",
+								"description": "Array of users id"
+							},
+							"users_count": {
+								"type": "integer",
+								"description": "Number of likes in cocktail"
+							}
+						}
+					}
+				},
+				"example": [
+					{
+						"_id": {
+							"$oid": "64ef9548de36dea225953fb6"
+						},
+						"drink": "Custom_Quentin",
+						"instructions": "Take and drink",
+						"drinkThumb": "http://res.cloudinary.com/dec1shvoo/image/upload/v1689167161/cocktails-v1/drinks/Quentin.jpg",
+						"usersId": [
+							"64eae6b73b8a2cf97c431fd7",
+							"64eb0a1d3fa4384dcb1f8fdf"
+						],
+						"users_count": 3
+					}
+				]
 			},
 			"CategoriesListResponse": {
 				"type": "array",

@@ -27,7 +27,8 @@ const ingredientsSchema = new Schema({
 const recipeSchema = new Schema(
 	{
 		drink: {
-			type: String
+			type: String,
+			required: true,
 		},
 		drinkAlternate: { type: String, default: null },
 		tags: { type: String, default: null },
