@@ -453,10 +453,27 @@
           {
             "in": "path",
             "name": "category",
+            "required": true,
             "schema": {
               "type": "string"
             },
             "description": "Category name"
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Page number"
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "string"
+            },
+            "description": "The number of elements on the page"
           }
         ],
         "security": [
@@ -494,6 +511,7 @@
           {
             "in": "path",
             "name": "id",
+            "required": true,
             "schema": {
               "type": "string"
             },
@@ -640,7 +658,7 @@
             "type": "string",
             "description": "User's token",
             "format": "JWT"
-          }          
+          }
         },
         "example": {
           "name": "Aaron Barnes",
@@ -1225,13 +1243,13 @@
           ]
         }
       }
-      },
-      "securitySchemes": {
-        "Bearer": {
-          "type": "http",
-          "scheme": "bearer",
-          "bearerFormat": "JWT"
-        }
+    },
+    "securitySchemes": {
+      "Bearer": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
     }
   }
 }

@@ -20,10 +20,12 @@ export const getRecipesForMainPage = async (req, res) => {
       .skip(random);
   };
   const response = {
-    "Odinary Drink": await queryForCategory("Ordinary Drink"),
-    Cocktail: await queryForCategory("Cocktail"),
-    Shake: await queryForCategory("Shake"),
-    "Other/Unknown": await queryForCategory("Other/Unknown"),
+    categoryName: {
+      "Odinary Drink": await queryForCategory("Ordinary Drink"),
+      Cocktail: await queryForCategory("Cocktail"),
+      Shake: await queryForCategory("Shake"),
+      "Other/Unknown": await queryForCategory("Other/Unknown"),
+    },
   };
   res.json(response);
 };
