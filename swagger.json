@@ -1,1255 +1,2097 @@
 {
-  "openapi": "3.0.1",
-  "info": {
-    "version": "2.0.0",
-    "title": "Swagger Drink master",
-    "description": "Showing off swagger-ui-express",
-    "license": {
-      "name": "MIT",
-      "url": "https://opensource.org/licenses/MIT"
-    }
-  },
-  "consumes": ["application/json", "multipart/form-data"],
-  "produces": ["application/json"],
-  "servers": [
-    {
-      "url": "http://localhost:3000/api"
-    },
-    {
-      "url": "https://project05-backend.onrender.com/api"
-    }
-  ],
-  "tags": [
-    {
-      "name": "Auth",
-      "description": "Authorization endpoints"
-    },
-    {
-      "name": "Own",
-      "description": "Owner endpoints"
-    },
-    {
-      "name": "Recipes",
-      "description": "Recipes endpoints"
-    },
-    {
-      "name": "Ingredients",
-      "description": "Ingredients endpoints"
-    },
-    {
-      "name": "Glass",
-      "description": "Glass endpoints"
-    },
-    {
-      "name": "Favorite",
-      "description": "Favorite endpoints"
-    },
-    {
-      "name": "Popular-recipe",
-      "description": "Popular-recipe endpoints"
-    },
-    {
-      "name": "Search",
-      "description": "Search endpoints"
-    }
-  ],
-  "paths": {
-    "/auth/register": {
-      "post": {
-        "tags": ["Auth"],
-        "summary": "User registration",
-        "parameters": [],
-        "requestBody": {
-          "description": "Registration's object",
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RegistrationRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "Successful operation",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RegistrationResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad request (invalid request body)",
-            "content": {}
-          },
-          "409": {
-            "description": "Provided email already exists",
-            "content": {}
-          }
-        }
-      }
-    },
-    "/auth/login": {
-      "post": {
-        "tags": ["Auth"],
-        "summary": "User login",
-        "parameters": [],
-        "requestBody": {
-          "description": "Login's object",
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/LoginRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successful operation",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/LoginResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad request (invalid request body)",
-            "content": {}
-          },
-          "401": {
-            "description": "Email or password is wrong",
-            "content": {}
-          }
-        }
-      }
-    },
-    "/auth/:id": {
-      "get": {
-        "tags": ["Auth"],
-        "summary": "Search users by ID or email",
-        "parameters": [
-          {
-            "in": "query",
-            "name": "id",
-            "schema": {
-              "type": "string"
-            },
-            "description": "User's ID"
-          },
-          {
-            "in": "query",
-            "name": "email",
-            "schema": {
-              "type": "string"
-            },
-            "format": "email",
-            "description": "User's email"
-          }
-        ],
-        "security": [
-          {
-            "Bearer": []
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful operation",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetUserResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Not authorized",
-            "content": {}
-          },
-          "404": {
-            "description": "Not found",
-            "content": {}
-          }
-        }
-      }
-    },
-    "/auth/update": {
-      "patch": {
-        "tags": ["Auth"],
-        "summary": "Update user's name or avatar",
-        "parameters": [
-          {
-            "in": "query",
-            "name": "_id",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "User's ID"
-          }
-        ],
-        "security": [
-          {
-            "Bearer": []
-          }
-        ],
-        "requestBody": {
-          "description": "User object with identifier or unique information",
-          "required": true,
-          "content": {
-            "multipart/form-data": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "name": {
-                    "type": "string",
-                    "description": "User's name"
-                  },
-                  "avatar": {
-                    "type": "string",
-                    "format": "binary",
-                    "description": "User's avatar image"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successful operation",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UpdateUserResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad request (invalid request body)",
-            "content": {}
-          },
-          "401": {
-            "description": "Not authorized",
-            "content": {}
-          }
-        }
-      }
-    },
-    "/auth/logout": {
-      "post": {
-        "tags": ["Auth"],
-        "summary": "User logout",
-        "parameters": [
-          {
-            "in": "query",
-            "name": "_id",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "User's ID"
-          }
-        ],
-        "security": [
-          {
-            "Bearer": []
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "Successful operation",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/LogoutUserResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad request (invalid request body)",
-            "content": {}
-          },
-          "401": {
-            "description": "Not authorized",
-            "content": {}
-          }
-        }
-      }
-    },
-    "/auth/subscribe": {
-      "patch": {
-        "tags": ["Auth"],
-        "summary": "User subscribe",
-        "parameters": [],
-        "security": [
-          {
-            "Bearer": []
-          }
-        ],
-        "requestBody": {
-          "description": "User object with email adress",
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/SubscribeUserRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Newsletter Subscribe sent",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SubscribeUserResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Missing required field email",
-            "content": {}
-          },
-          "404": {
-            "description": "User not found",
-            "content": {}
-          }
-        }
-      }
-    },
-    "/search": {
-      "get": {
-        "tags": ["Search"],
-        "summary": "Search for cocktail recipes by name, category or ingredient",
-        "parameters": [
-          {
-            "in": "query",
-            "name": "keyword",
-            "schema": {
-              "type": "string"
-            },
-            "description": "Cocktail name, category or ingredient."
-          },
-          {
-            "in": "query",
-            "name": "pageNumber",
-            "schema": {
-              "type": "string"
-            },
-            "description": "Page number"
-          },
-          {
-            "in": "query",
-            "name": "pageSize",
-            "schema": {
-              "type": "string"
-            },
-            "description": "The number of elements on the page"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful operation",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SearchResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad request (invalid request body)",
-            "content": {}
-          },
-          "401": {
-            "description": "Recipes not found",
-            "content": {}
-          }
-        }
-      }
-    },
-    "/recipes/category-list": {
-      "get": {
-        "tags": ["Recipes"],
-        "summary": "Get list of categories names",
-        "parameters": [],
-        "security": [
-          {
-            "Bearer": []
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful operation",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CategoriesListResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad request (invalid request body)",
-            "content": {}
-          },
-          "401": {
-            "description": "Not authorized",
-            "content": {}
-          }
-        }
-      }
-    },
-    "/recipes/main-page": {
-      "get": {
-        "tags": ["Recipes"],
-        "summary": "Get recipes for main page",
-        "parameters": [],
-        "security": [
-          {
-            "Bearer": []
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful operation",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/MainPageResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad request (invalid request body)",
-            "content": {}
-          },
-          "401": {
-            "description": "Not authorized",
-            "content": {}
-          }
-        }
-      }
-    },
-    "/recipes/{category}": {
-      "get": {
-        "tags": ["Recipes"],
-        "summary": "Get recipes by category",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "category",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "Category name"
-          },
-          {
-            "in": "query",
-            "name": "page",
-            "schema": {
-              "type": "string"
-            },
-            "description": "Page number"
-          },
-          {
-            "in": "query",
-            "name": "limit",
-            "schema": {
-              "type": "string"
-            },
-            "description": "The number of elements on the page"
-          }
-        ],
-        "security": [
-          {
-            "Bearer": []
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful operation",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SearchByCategoryResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad request (invalid request body)",
-            "content": {}
-          },
-          "401": {
-            "description": "Not authorized",
-            "content": {}
-          }
-        }
-      }
-    },
-    "/recipes/{id}": {
-      "get": {
-        "tags": ["Recipes"],
-        "summary": "Get recipe by id",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "id",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "Cocktail id"
-          }
-        ],
-        "security": [
-          {
-            "Bearer": []
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful operation",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SearchRecipeByIdResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad request (invalid request body)",
-            "content": {}
-          },
-          "401": {
-            "description": "Not authorized",
-            "content": {}
-          }
-        }
-      }
-    },
-    "/ingredients/list": {
-      "get": {
-        "tags": ["Ingredients"],
-        "summary": "Get ingredients list",
-        "parameters": [],
-        "security": [
-          {
-            "Bearer": []
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful operation",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetIngredientsListResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad request (invalid request body)",
-            "content": {}
-          },
-          "401": {
-            "description": "Not authorized",
-            "content": {}
-          }
-        }
-      }
-    },
-    "/glass": {
-      "get": {
-        "tags": ["Glass"],
-        "summary": "Get glasses list",
-        "parameters": [],
-        "security": [
-          {
-            "Bearer": []
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful operation",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetGlassResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad request (invalid request body)",
-            "content": {}
-          },
-          "401": {
-            "description": "Not authorized",
-            "content": {}
-          }
-        }
-      }
-    }
-  },
-  "components": {
-    "schemas": {
-      "RegistrationRequest": {
-        "type": "object",
-        "required": ["name", "email", "password"],
-        "properties": {
-          "name": {
-            "type": "string",
-            "description": "User's name"
-          },
-          "email": {
-            "type": "string",
-            "description": "User's email",
-            "format": "email"
-          },
-          "password": {
-            "type": "string",
-            "description": "User's password"
-          }
-        },
-        "example": {
-          "name": "Aaron Barnes",
-          "email": "aaron@gmail.com",
-          "password": "Qwe123"
-        }
-      },
-      "RegistrationResponse": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string",
-            "description": "User's name",
-            "format": "Aaron Barnes"
-          },
-          "email": {
-            "type": "string",
-            "description": "User's email",
-            "format": "email"
-          },
-          "avatarURL": {
-            "type": "string",
-            "description": "User's avatar",
-            "example": "//www.gravatar.com/avatar/395df683fb7c0f1aad22dbf40031517a?s=200&d=identicon"
-          },
-          "token": {
-            "type": "string",
-            "description": "User's token",
-            "format": "JWT"
-          }
-        },
-        "example": {
-          "name": "Aaron Barnes",
-          "email": "aaron@gmail.com",
-          "avatarURL": "//www.gravatar.com/avatar/395df683fb7c0f1aad22dbf40031517a?s=200&d=identicon",
-          "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0ZWJlMjY0ZDJhZTdkYWJjYjViZTBkYiIsImlhdCI6MTY5MzQ2OTU0MiwiZXhwIjoxNjk1MjgzOTQyfQ.hcG4kTbunvFLj5_UoLe7tu9AK9wMX9BdkoSrA8oc97U"
-        }
-      },
-      "LoginRequest": {
-        "type": "object",
-        "required": ["email", "password"],
-        "properties": {
-          "email": {
-            "type": "string",
-            "description": "User's email",
-            "format": "email"
-          },
-          "password": {
-            "type": "string",
-            "description": "User's password",
-            "example": "Qwe123"
-          }
-        },
-        "example": {
-          "email": "aaron@gmail.com",
-          "password": "Qwe123"
-        }
-      },
-      "LoginResponse": {
-        "type": "object",
-        "properties": {
-          "token": {
-            "type": "string",
-            "description": "User's token",
-            "format": "JWT"
-          },
-          "user": {
-            "type": "object",
-            "properties": {
-              "email": {
-                "type": "string",
-                "description": "User's email",
-                "format": "email"
-              }
-            }
-          }
-        },
-        "example": [
-          {
-            "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0ZWJlMjY0ZDJhZTdkYWJjYjViZTBkYiIsImlhdCI6MTY5MzQ2OTU0MiwiZXhwIjoxNjk1MjgzOTQyfQ.hcG4kTbunvFLj5_UoLe7tu9AK9wMX9BdkoSrA8oc97U",
-            "user": {
-              "email": "aaron@gmail.com"
-            }
-          }
-        ]
-      },
-      "GetUserResponse": {
-        "type": "object",
-        "properties": {
-          "user": {
-            "type": "object",
-            "properties": {
-              "_id": {
-                "type": "string",
-                "description": "User's _id"
-              },
-              "name": {
-                "type": "string",
-                "description": "User's name"
-              },
-              "password": {
-                "type": "string",
-                "description": "User's password",
-                "format": "password"
-              },
-              "email": {
-                "type": "string",
-                "description": "User's email",
-                "format": "email"
-              },
-              "avatarURL": {
-                "type": "string",
-                "description": "User's avatar"
-              },
-              "subscribe": {
-                "type": "boolean",
-                "description": "User's subscribe"
-              },
-              "token": {
-                "type": "string",
-                "description": "User's token",
-                "format": "JWT"
-              }
-            }
-          }
-        },
-        "example": {
-          "user": {
-            "_id": "64ebe264d2ae7dabcb5be0db",
-            "name": "Aaron Barnes",
-            "password": "$2b$10$t566cThgNEGlsi.9d5HRi.ig/znXEKj4k4Nw2XdFJmRIvZ3gna.2y",
-            "email": "aaron@gmail.com",
-            "avatarURL": "//www.gravatar.com/avatar/395df683fb7c0f1aad22dbf40031517a?s=200&d=identicon",
-            "subscribe": false,
-            "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0ZWJlMjY0ZDJhZTdkYWJjYjViZTBkYiIsImlhdCI6MTY5MzQ2OTU0MiwiZXhwIjoxNjk1MjgzOTQyfQ.hcG4kTbunvFLj5_UoLe7tu9AK9wMX9BdkoSrA8oc97U"
-          }
-        }
-      },
-      "UpdateUserResponse": {
-        "type": "object",
-        "properties": {
-          "user": {
-            "type": "object",
-            "properties": {
-              "_id": {
-                "type": "string",
-                "description": "User's _id"
-              },
-              "name": {
-                "type": "string",
-                "description": "User's name"
-              },
-              "password": {
-                "type": "string",
-                "description": "User's password",
-                "format": "password"
-              },
-              "email": {
-                "type": "string",
-                "description": "User's email",
-                "format": "email"
-              },
-              "avatarURL": {
-                "type": "string",
-                "description": "User's avatar"
-              },
-              "subscribe": {
-                "type": "boolean",
-                "description": "User's subscribe"
-              },
-              "token": {
-                "type": "string",
-                "description": "User's token",
-                "format": "JWT"
-              }
-            }
-          }
-        },
-        "example": {
-          "user": {
-            "_id": "64ebe264d2ae7dabcb5be0db",
-            "name": "Aaron Barnes",
-            "password": "$2b$10$t566cThgNEGlsi.9d5HRi.ig/znXEKj4k4Nw2XdFJmRIvZ3gna.2y",
-            "email": "aaron@gmail.com",
-            "avatarURL": "//www.gravatar.com/avatar/395df683fb7c0f1aad22dbf40031517a?s=200&d=identicon",
-            "subscribe": false,
-            "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0ZWJlMjY0ZDJhZTdkYWJjYjViZTBkYiIsImlhdCI6MTY5MzQ2OTU0MiwiZXhwIjoxNjk1MjgzOTQyfQ.hcG4kTbunvFLj5_UoLe7tu9AK9wMX9BdkoSrA8oc97U"
-          }
-        }
-      },
-      "LogoutUserResponse": {
-        "type": "object",
-        "properties": {
-          "message": {
-            "type": "string",
-            "description": "Message"
-          }
-        },
-        "example": {
-          "message": "No Content"
-        }
-      },
-      "SubscribeUserRequest": {
-        "type": "object",
-        "required": ["email"],
-        "properties": {
-          "_id": {
-            "type": "string",
-            "description": "User's email"
-          }
-        },
-        "example": {
-          "email": "aaron@gmail.com"
-        }
-      },
-      "SubscribeUserResponse": {
-        "type": "object",
-        "properties": {
-          "message": {
-            "type": "string",
-            "description": "Message"
-          }
-        },
-        "example": {
-          "message": "Newsletter Subscribe sent"
-        }
-      },
-      "SearchResponse": {
-        "type": "object",
-        "properties": {
-          "cocktails": {
-            "type": "array",
-            "description": "Array of cocktails"
-          }
-        },
-        "example": {
-          "cocktails": [
-            {
-              "_id": "639b6de9ff77d221f190c50f",
-              "drink": "Quentin",
-              "drinkAlternate": null,
-              "tags": null,
-              "video": null,
-              "category": "Ordinary Drink",
-              "IBA": null,
-              "alcoholic": "Alcoholic",
-              "glass": "Cocktail glass",
-              "instructions": "In a shaker half-filled with ice cubes, combine the rum, Kahlua, and cream. Shake well. Strain into a cocktail glass and garnish with the nutmeg.",
-              "instructionsES": "En una coctelera llena hasta la mitad con cubitos de hielo, combine el ron, Kahlua y la crema. Agite bien. Colar en una copa de cóctel y decorar con la nuez moscada.",
-              "instructionsDE": "In einem Shaker, der halb mit Eiswürfeln gefüllt ist, Rum, Kahlua und Sahne mischen. Gut schütteln. In ein Cocktailglas abseihen und mit der Muskatnuss garnieren.",
-              "instructionsFR": "Dans un shaker à moitié rempli de glaçons, mélanger le rhum, le Kahlua et la crème. Bien agiter. Versez dans un verre à cocktail et décorez avec la noix de muscade.",
-              "instructionsIT": "In uno shaker riempito a metà con cubetti di ghiaccio, unire il rum, il Kahlua e la panna. Filtrare in una coppetta da cocktail e guarnire con la noce moscata. Agitare bene.",
-              "instructionsRU": "В шейкере, наполовину наполненном кубиками льда, смешайте ром, Калуа и сливки. Хорошо встряхнуть. Процедите в коктейльный бокал и украсьте мускатным орехом.",
-              "instructionsPL": "W shakerze wypełnionym do połowy kostkami lodu wymieszać rum, Kahlua i śmietanę. Dobrze wstrząsnąć. Przelej do kieliszka koktajlowego i udekoruj gałką muszkatołową.",
-              "instructionsUK": "У шейкері, наповненому наполовину кубиками льоду, змішайте ром, Калуа та вершки. Добре струсити. Процідіть у келих для коктейлю та прикрасьте мускатним горіхом.",
-              "drinkThumb": "http://res.cloudinary.com/dec1shvoo/image/upload/v1689167161/cocktails-v1/drinks/Quentin.jpg",
-              "ingredients": [
-                {
-                  "title": "Dark rum",
-                  "measure": "1 1/2 oz ",
-                  "ingredientThumb": "http://res.cloudinary.com/dec1shvoo/image/upload/v1689169605/cocktails-v1/ingredient/Dark%20rum.png",
-                  "thumb-medium": "http://res.cloudinary.com/dec1shvoo/image/upload/v1689169605/cocktails-v1/ingredient/Dark%20rum-Medium.png",
-                  "thumb-small": "http://res.cloudinary.com/dec1shvoo/image/upload/v1689169605/cocktails-v1/ingredient/Dark%20rum-Small.png"
-                },
-                {
-                  "title": "Kahlua",
-                  "measure": "1/2 oz ",
-                  "ingredientThumb": "http://res.cloudinary.com/dec1shvoo/image/upload/v1689169605/cocktails-v1/ingredient/Kahlua.png",
-                  "thumb-medium": "http://res.cloudinary.com/dec1shvoo/image/upload/v1689169605/cocktails-v1/ingredient/Kahlua-Medium.png",
-                  "thumb-small": "http://res.cloudinary.com/dec1shvoo/image/upload/v1689169605/cocktails-v1/ingredient/Kahlua-Small.png"
-                },
-                {
-                  "title": "Light cream",
-                  "measure": "1 oz "
-                },
-                {
-                  "title": "Nutmeg",
-                  "measure": "1/8 tsp grated "
-                }
-              ],
-              "updatedAt": "2023-08-30T20:46:19.461Z",
-              "usersId": [
-                "64eae6b73b8a2cf97c431fd7",
-                "64eb0a1d3fa4384dcb1f8fdf"
-              ]
-            }
-          ],
-          "totalPages": 1,
-          "totalCount": 1,
-          "currentPage": "1"
-        }
-      },
-      "SearchByCategoryResponse": {
-        "type": "array",
-        "properties": {
-          "categoryName": {
-            "type": "object",
-            "description": "Object of cateogory",
-            "properties": {
-              "userId": {
-                "type": "array",
-                "description": "Array of users id"
-              },
-              "_id": {
-                "type": "string",
-                "description": "Cocktail _id"
-              },
-              "drink": {
-                "type": "string",
-                "description": "Name of cocktail"
-              },
-              "category": {
-                "type": "string",
-                "description": "Name of cocktail category"
-              },
-              "alcoholic": {
-                "type": "string",
-                "description": "Type of cocktail"
-              },
-              "glass": {
-                "type": "string",
-                "description": "Type of glass"
-              },
-              "instructions": {
-                "type": "string",
-                "description": "Instructions how cooking cocktail"
-              },
-              "drinkThumb": {
-                "type": "string",
-                "description": "link to cocktail image"
-              },
-              "ingredients": {
-                "type": "array",
-                "description": "Array of object with cocktail ingredients"
-              }
-            }
-          }
-        },
-        "example": [
-          {
-            "usersId": [],
-            "_id": "639b6de9ff77d221f190c558",
-            "drink": "Pineapple Gingerale Smoothie",
-            "drinkAlternate": null,
-            "tags": null,
-            "video": null,
-            "category": "Other/Unknown",
-            "IBA": null,
-            "alcoholic": "Non alcoholic",
-            "glass": "Highball Glass",
-            "instructions": "Throw everything into a blender and liquify.",
-            "instructionsES": "Echar todo en una licuadora y licuar.",
-            "instructionsDE": "Alles in einen Mixer geben und aufschlagen.",
-            "instructionsFR": "Mettre le tout dans un blender et liquéfier.",
-            "instructionsIT": "Getta tutto in un frullatore e liquida.",
-            "instructionsRU": "Все бросить в блендер и измельчить.",
-            "instructionsPL": "Wrzuć wszystko do blendera i upłynnij.",
-            "instructionsUK": "Киньте все в блендер і перемішайте.",
-            "drinkThumb": "https://res.cloudinary.com/dec1shvoo/image/upload/v1689167144/cocktails-v1/drinks/Pineapple_Gingerale_Smoothie.jpg",
-            "ingredients": [
-              {
-                "title": "Ginger",
-                "measure": "1/4 inch ",
-                "ingredientThumb": "http://res.cloudinary.com/dec1shvoo/image/upload/v1689169605/cocktails-v1/ingredient/Ginger.png",
-                "thumb-medium": "http://res.cloudinary.com/dec1shvoo/image/upload/v1689169605/cocktails-v1/ingredient/Ginger-Medium.png",
-                "thumb-small": "http://res.cloudinary.com/dec1shvoo/image/upload/v1689169605/cocktails-v1/ingredient/Ginger-Small.png"
-              },
-              {
-                "title": "Pineapple",
-                "measure": "1/2 "
-              }
-            ]
-          }
-        ]
-      },
-      "CategoriesListResponse": {
-        "type": "array",
-        "properties": {
-          "category": {
-            "type": "object",
-            "description": "Object of cocktails category",
-            "properties": {
-              "_id": {
-                "type": "string",
-                "description": "Category _id"
-              },
-              "category": {
-                "type": "string",
-                "description": "Category name"
-              }
-            }
-          }
-        },
-        "example": [
-          {
-            "_id": "64e739882dbe162adf32dcc1",
-            "category": "Beer"
-          }
-        ]
-      },
-      "GetGlassResponse": {
-        "type": "array",
-        "properties": {
-          "glassObject": {
-            "type": "object",
-            "_id": {
-              "type": "string",
-              "description": "Glass _id"
-            },
-            "glass": {
-              "type": "string",
-              "description": "Glass name"
-            }
-          }
-        },
-        "example": [
-          {
-            "_id": "64e728b82dbe162adf32dcad",
-            "glass": "Beer Glass"
-          },
-          {
-            "_id": "64e728b82dbe162adf32dcaa",
-            "glass": "Beer mug"
-          }
-        ]
-      },
-      "GetIngredientsListResponse": {
-        "type": "array",
-        "properties": {
-          "ingredientObject": {
-            "type": "object",
-            "_id": {
-              "type": "string",
-              "description": "Ingredient _id"
-            },
-            "title": {
-              "type": "string",
-              "description": "Ingredient title"
-            },
-            "ingredientThumb": {
-              "type": "string",
-              "description": "Ingredient image"
-            },
-            "thumb-medium": {
-              "type": "string",
-              "description": "Ingredient image medium"
-            },
-            "thumb-small": {
-              "type": "string",
-              "description": "Ingredient image small"
-            }
-          }
-        },
-        "example": [
-          {
-            "_id": "64e619c32dbe162adf32dbdf",
-            "title": "Grapefruit juice",
-            "ingredientThumb": "http://res.cloudinary.com/dec1shvoo/image/upload/v1689169605/cocktails-v1/ingredient/Grapefruit%20juice.png",
-            "thumb-medium": "http://res.cloudinary.com/dec1shvoo/image/upload/v1689169605/cocktails-v1/ingredient/Grapefruit%20juice-Medium.png",
-            "thumb-small": "http://res.cloudinary.com/dec1shvoo/image/upload/v1689169605/cocktails-v1/ingredient/Grapefruit%20juice-Small.png"
-          },
-          {
-            "_id": "64e619c32dbe162adf32dbbf",
-            "title": "Triple sec",
-            "ingredientThumb": "http://res.cloudinary.com/dec1shvoo/image/upload/v1689169611/cocktails-v1/ingredient/Triple%20sec.png",
-            "thumb-medium": "http://res.cloudinary.com/dec1shvoo/image/upload/v1689169611/cocktails-v1/ingredient/Triple%20sec-Medium.png",
-            "thumb-small": "http://res.cloudinary.com/dec1shvoo/image/upload/v1689169611/cocktails-v1/ingredient/Triple%20sec-Small.png"
-          }
-        ]
-      },
-      "SearchRecipeByIdResponse": {
-        "type": "object",
-        "properties": {
-          "userId": {
-            "type": "array",
-            "description": "Array of users id"
-          },
-          "_id": {
-            "type": "string",
-            "description": "Cocktail _id"
-          },
-          "drink": {
-            "type": "string",
-            "description": "Name of cocktail"
-          },
-          "category": {
-            "type": "string",
-            "description": "Name of cocktail category"
-          },
-          "alcoholic": {
-            "type": "string",
-            "description": "Type of cocktail"
-          },
-          "glass": {
-            "type": "string",
-            "description": "Type of glass"
-          },
-          "instructions": {
-            "type": "string",
-            "description": "Instructions how cooking cocktail"
-          },
-          "drinkThumb": {
-            "type": "string",
-            "description": "link to cocktail image"
-          },
-          "ingredients": {
-            "type": "array",
-            "description": "Array of object with cocktail ingredients"
-          }
-        },
-        "example": {
-          "usersId": [],
-          "_id": "639b6de9ff77d221f190c558",
-          "drink": "Passion Fruit Martini",
-          "drinkAlternate": null,
-          "tags": null,
-          "video": null,
-          "category": "Cocktail",
-          "IBA": null,
-          "alcoholic": "Alcoholic",
-          "glass": "Cocktail glass",
-          "instructions": "Pour all ingredients into a glass and stir. Garnish with half a passion fruit piece.",
-          "instructionsES": "Vierta todos los ingredientes en un vaso y revuelva. Decorar con media pieza de maracuyá.",
-          "instructionsDE": "Alle Zutaten in ein Glas geben und umrühren. Mit einem halben Passionsfruchtstück garnieren.",
-          "instructionsFR": "Verser tous les ingrédients dans un verre et remuer. Garnir d'un demi-morceau de fruit de la passion.",
-          "instructionsIT": "Versare tutti gli ingredienti in un bicchiere e mescolare. Guarnire con mezzo pezzo di frutto della passione.",
-          "instructionsRU": "Налейте все ингредиенты в стакан и перемешайте. Украсьте половиной кусочка маракуйи.",
-          "instructionsPL": "Wszystkie składniki wlej do szklanki i wymieszaj. Udekoruj połową kawałka marakui.",
-          "instructionsUK": "Перелийте всі інгредієнти в склянку і перемішайте. Прикрасьте половинкою шматочка маракуйї.",
-          "drinkThumb": "https://res.cloudinary.com/dec1shvoo/image/upload/v1689167144/cocktails-v1/drinks/Passion_Fruit_Martini.jpg",
-          "ingredients": [
-            {
-              "title": "Vodka",
-              "measure": "1 shot",
-              "ingredientThumb": "http://res.cloudinary.com/dec1shvoo/image/upload/v1689169611/cocktails-v1/ingredient/Vodka.png",
-              "thumb-medium": "http://res.cloudinary.com/dec1shvoo/image/upload/v1689169611/cocktails-v1/ingredient/Vodka-Medium.png",
-              "thumb-small": "http://res.cloudinary.com/dec1shvoo/image/upload/v1689169611/cocktails-v1/ingredient/Vodka-Small.png"
-            },
-            {
-              "title": "Sugar Syrup",
-              "measure": "1/2 shot"
-            },
-            {
-              "title": "Passion fruit juice",
-              "measure": "Full Glass"
-            }
-          ]
-        }
-      },
-      "MainPageResponse": {
-        "type": "object",
-        "properties": {
-          "categoryName": {
-            "type": "object",
-            "description": "Object of cateogory",
-            "properties": {
-              "_id": {
-                "type": "string",
-                "description": "Cocktail _id"
-              },
-              "drink": {
-                "type": "string",
-                "description": "Name of cocktail"
-              },
-              "category": {
-                "type": "string",
-                "description": "Name of cocktail category"
-              },
-              "drinkThumb": {
-                "type": "string",
-                "description": "link to cocktail image"
-              },
-              "ingredients": {
-                "type": "array",
-                "description": "Array of object with cocktail ingredients"
-              }
-            }
-          }
-        },
-        "example": {
-          "category": [
-            {
-              "_id": "639b6de9ff77d221f190c53d",
-              "drink": "Owen's Grandmother's Revenge",
-              "category": "Ordinary Drink",
-              "drinkThumb": "https://res.cloudinary.com/dec1shvoo/image/upload/v1689167160/cocktails-v1/drinks/Owen%27s_Grandmother%27s_Revenge.jpg",
-              "ingredients": [
-                {
-                  "title": "Whiskey",
-                  "measure": "12 oz ",
-                  "ingredientThumb": "http://res.cloudinary.com/dec1shvoo/image/upload/v1689169615/cocktails-v1/ingredient/Whiskey.png",
-                  "thumb-medium": "http://res.cloudinary.com/dec1shvoo/image/upload/v1689169615/cocktails-v1/ingredient/Whiskey-Medium.png",
-                  "thumb-small": "http://res.cloudinary.com/dec1shvoo/image/upload/v1689169615/cocktails-v1/ingredient/Whiskey-Small.png"
-                },
-                {
-                  "title": "Beer",
-                  "measure": "12 oz "
-                },
-                {
-                  "title": "Lemonade",
-                  "measure": "12 oz frozen ",
-                  "ingredientThumb": "http://res.cloudinary.com/dec1shvoo/image/upload/v1689169610/cocktails-v1/ingredient/Lemonade.png",
-                  "thumb-medium": "http://res.cloudinary.com/dec1shvoo/image/upload/v1689169610/cocktails-v1/ingredient/Lemonade-Medium.png",
-                  "thumb-small": "http://res.cloudinary.com/dec1shvoo/image/upload/v1689169610/cocktails-v1/ingredient/Lemonade-Small.png"
-                },
-                {
-                  "title": "Ice",
-                  "measure": "1 cup crushed "
-                }
-              ]
-            }
-          ]
-        }
-      }
-    },
-    "securitySchemes": {
-      "Bearer": {
-        "type": "http",
-        "scheme": "bearer",
-        "bearerFormat": "JWT"
-      }
-    }
-  }
+	"openapi": "3.0.1",
+	"info": {
+		"version": "2.0.0",
+		"title": "Swagger Drink master",
+		"description": "Showing off swagger-ui-express",
+		"license": {
+			"name": "MIT",
+			"url": "https://opensource.org/licenses/MIT"
+		}
+	},
+	"consumes": [
+		"application/json",
+		"multipart/form-data"
+	],
+	"produces": [
+		"application/json"
+	],
+	"servers": [
+		{
+			"url": "http://localhost:3000/api"
+		},
+		{
+			"url": "https://project05-backend.onrender.com/api"
+		}
+	],
+	"tags": [
+		{
+			"name": "Auth",
+			"description": "Authorization endpoints"
+		},
+		{
+			"name": "Own",
+			"description": "Owner endpoints"
+		},
+		{
+			"name": "Recipes",
+			"description": "Recipes endpoints"
+		},
+		{
+			"name": "Ingredients",
+			"description": "Ingredients endpoints"
+		},
+		{
+			"name": "Glass",
+			"description": "Glass endpoints"
+		},
+		{
+			"name": "Favorite",
+			"description": "Favorite endpoints"
+		},
+		{
+			"name": "Popular-recipe",
+			"description": "Popular-recipe endpoints"
+		},
+		{
+			"name": "Search",
+			"description": "Search endpoints"
+		}
+	],
+	"paths": {
+		"/auth/register": {
+			"post": {
+				"tags": [
+					"Auth"
+				],
+				"summary": "User registration",
+				"parameters": [],
+				"requestBody": {
+					"description": "Registration's object",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/RegistrationRequest"
+							}
+						}
+					}
+				},
+				"responses": {
+					"201": {
+						"description": "Successful operation",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/RegistrationResponse"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Bad request (invalid request body)",
+						"content": {}
+					},
+					"409": {
+						"description": "Provided email already exists",
+						"content": {}
+					}
+				}
+			}
+		},
+		"/auth/login": {
+			"post": {
+				"tags": [
+					"Auth"
+				],
+				"summary": "User login",
+				"parameters": [],
+				"requestBody": {
+					"description": "Login's object",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/LoginRequest"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Successful operation",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/LoginResponse"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Bad request (invalid request body)",
+						"content": {}
+					},
+					"401": {
+						"description": "Email or password is wrong",
+						"content": {}
+					}
+				}
+			}
+		},
+		"/auth/:id": {
+			"get": {
+				"tags": [
+					"Auth"
+				],
+				"summary": "Search users by ID or email",
+				"parameters": [
+					{
+						"in": "query",
+						"name": "id",
+						"schema": {
+							"type": "string"
+						},
+						"description": "User's ID"
+					},
+					{
+						"in": "query",
+						"name": "email",
+						"schema": {
+							"type": "string"
+						},
+						"format": "email",
+						"description": "User's email"
+					}
+				],
+				"security": [
+					{
+						"Bearer": []
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful operation",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/GetUserResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Not authorized",
+						"content": {}
+					},
+					"404": {
+						"description": "Not found",
+						"content": {}
+					}
+				}
+			}
+		},
+		"/auth/update": {
+			"patch": {
+				"tags": [
+					"Auth"
+				],
+				"summary": "Update user's name or avatar",
+				"parameters": [
+					{
+						"in": "query",
+						"name": "_id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						},
+						"description": "User's ID"
+					}
+				],
+				"security": [
+					{
+						"Bearer": []
+					}
+				],
+				"requestBody": {
+					"description": "User object with identifier or unique information",
+					"required": true,
+					"content": {
+						"multipart/form-data": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"name": {
+										"type": "string",
+										"description": "User's name"
+									},
+									"avatar": {
+										"type": "string",
+										"format": "binary",
+										"description": "User's avatar image"
+									}
+								}
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Successful operation",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UpdateUserResponse"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Bad request (invalid request body)",
+						"content": {}
+					},
+					"401": {
+						"description": "Not authorized",
+						"content": {}
+					}
+				}
+			}
+		},
+		"/auth/logout": {
+			"post": {
+				"tags": [
+					"Auth"
+				],
+				"summary": "User logout",
+				"parameters": [
+					{
+						"in": "query",
+						"name": "_id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						},
+						"description": "User's ID"
+					}
+				],
+				"security": [
+					{
+						"Bearer": []
+					}
+				],
+				"responses": {
+					"204": {
+						"description": "Successful operation",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/LogoutUserResponse"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Bad request (invalid request body)",
+						"content": {}
+					},
+					"401": {
+						"description": "Not authorized",
+						"content": {}
+					}
+				}
+			}
+		},
+		"/auth/subscribe": {
+			"patch": {
+				"tags": [
+					"Auth"
+				],
+				"summary": "User subscribe",
+				"parameters": [],
+				"security": [
+					{
+						"Bearer": []
+					}
+				],
+				"requestBody": {
+					"description": "User object with email adress",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/SubscribeUserRequest"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Newsletter Subscribe sent",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SubscribeUserResponse"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Missing required field email",
+						"content": {}
+					},
+					"404": {
+						"description": "User not found",
+						"content": {}
+					}
+				}
+			}
+		},
+		"/search": {
+			"get": {
+				"tags": [
+					"Search"
+				],
+				"summary": "Search for cocktail recipes by name, category or ingredient",
+				"parameters": [
+					{
+						"in": "query",
+						"name": "keyword",
+						"schema": {
+							"type": "string"
+						},
+						"description": "Cocktail name, category or ingredient."
+					},
+					{
+						"in": "query",
+						"name": "pageNumber",
+						"schema": {
+							"type": "string"
+						},
+						"description": "Page number"
+					},
+					{
+						"in": "query",
+						"name": "pageSize",
+						"schema": {
+							"type": "string"
+						},
+						"description": "The number of elements on the page"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful operation",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SearchResponse"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Bad request (invalid request body)",
+						"content": {}
+					},
+					"401": {
+						"description": "Recipes not found",
+						"content": {}
+					}
+				}
+			}
+		},
+		"/recipes/category-list": {
+			"get": {
+				"tags": [
+					"Recipes"
+				],
+				"summary": "Get list of categories names",
+				"parameters": [],
+				"security": [
+					{
+						"Bearer": []
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful operation",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/CategoriesListResponse"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Bad request (invalid request body)",
+						"content": {}
+					},
+					"401": {
+						"description": "Not authorized",
+						"content": {}
+					}
+				}
+			}
+		},
+		"/recipes/main-page": {
+			"get": {
+				"tags": [
+					"Recipes"
+				],
+				"summary": "Get recipes for main page",
+				"parameters": [],
+				"security": [
+					{
+						"Bearer": []
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful operation",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/MainPageResponse"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Bad request (invalid request body)",
+						"content": {}
+					},
+					"401": {
+						"description": "Not authorized",
+						"content": {}
+					}
+				}
+			}
+		},
+		"/recipes/{category}": {
+			"get": {
+				"tags": [
+					"Recipes"
+				],
+				"summary": "Get recipes by category",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "category",
+						"schema": {
+							"type": "string"
+						},
+						"description": "Category name"
+					}
+				],
+				"security": [
+					{
+						"Bearer": []
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful operation",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SearchByCategoryResponse"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Bad request (invalid request body)",
+						"content": {}
+					},
+					"401": {
+						"description": "Not authorized",
+						"content": {}
+					}
+				}
+			}
+		},
+		"/recipes/{id}": {
+			"get": {
+				"tags": [
+					"Recipes"
+				],
+				"summary": "Get recipe by id",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"schema": {
+							"type": "string"
+						},
+						"description": "Cocktail id"
+					}
+				],
+				"security": [
+					{
+						"Bearer": []
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful operation",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SearchRecipeByIdResponse"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Bad request (invalid request body)",
+						"content": {}
+					},
+					"401": {
+						"description": "Not authorized",
+						"content": {}
+					}
+				}
+			}
+		},
+		"/ingredients/list": {
+			"get": {
+				"tags": [
+					"Ingredients"
+				],
+				"summary": "Get ingredients list",
+				"parameters": [],
+				"security": [
+					{
+						"Bearer": []
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful operation",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/GetIngredientsListResponse"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Bad request (invalid request body)",
+						"content": {}
+					},
+					"401": {
+						"description": "Not authorized",
+						"content": {}
+					}
+				}
+			}
+		},
+		"/glass": {
+			"get": {
+				"tags": [
+					"Glass"
+				],
+				"summary": "Get glasses list",
+				"parameters": [],
+				"security": [
+					{
+						"Bearer": []
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful operation",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/GetGlassResponse"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Bad request (invalid request body)",
+						"content": {}
+					},
+					"401": {
+						"description": "Not authorized",
+						"content": {}
+					}
+				}
+			}
+		},
+		"/own": {
+			"get": {
+				"tags": [
+					"Own"
+				],
+				"summary": "Receive all recipes from list",
+				"parameters": [],
+				"security": [
+					{
+						"Bearer": []
+					}
+				],
+				"responses": {
+					"201": {
+						"description": "Created",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/GetAllOwnRecipeResponse"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Bad request (invalid request body)",
+						"content": {}
+					},
+					"401": {
+						"description": "Not authorized",
+						"content": {}
+					}
+				}
+			},
+			"post": {
+				"tags": [
+					"Own"
+				],
+				"summary": "Add new recipe to list",
+				"parameters": [],
+				"security": [
+					{
+						"Bearer": []
+					}
+				],
+				"requestBody": {
+					"description": "User object with identifier or unique information",
+					"required": true,
+					"content": {
+						"multipart/form-data": {
+							"schema": {
+								"$ref": "#/components/schemas/AddRecipeRequest"
+							}
+						}
+					}
+				},
+				"responses": {
+					"201": {
+						"description": "Created",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AddRecipeResponse"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Bad request (invalid request body)",
+						"content": {}
+					},
+					"401": {
+						"description": "Not authorized",
+						"content": {}
+					}
+				}
+			}
+		},
+		"/own/:recipeId": {
+			"delete": {
+				"tags": [
+					"Own"
+				],
+				"summary": "Delete recipe from DB",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "recipeId",
+						"required": true,
+						"type": "string",
+						"description": "Recipe`s id"
+					}
+				],
+				"security": [
+					{
+						"Bearer": []
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful operation",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string",
+											"description": "Success deleted",
+											"example": "Deleted"
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Bad request (invalid request body)",
+						"content": {}
+					},
+					"401": {
+						"description": "Not authorized",
+						"content": {}
+					},
+					"404": {
+						"description": "Not valid ID",
+						"content": {}
+					}
+				}
+			}
+		},
+		"/favorite": {
+			"get": {
+				"tags": [
+					"Favorite"
+				],
+				"summary": "Receive all favorite recipes.",
+				"parameters": [],
+				"security": [
+					{
+						"Bearer": []
+					}
+				],
+				"responses": {
+					"201": {
+						"description": "Success",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/GetAllFavoriteResponse"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Bad request (invalid request body)",
+						"content": {}
+					},
+					"401": {
+						"description": "Not authorized",
+						"content": {}
+					}
+				}
+			}
+		},
+		"/favorite/:recipeId": {
+			"delete": {
+				"tags": [
+					"Favorite"
+				],
+				"summary": "Delete recipe from favorite",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "recipeId",
+						"required": true,
+						"type": "string",
+						"description": "Recipe`s id"
+					}
+				],
+				"security": [
+					{
+						"Bearer": []
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful operation",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string",
+											"description": "Success deleted",
+											"example": "Deleted"
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Bad request (invalid request body)",
+						"content": {}
+					},
+					"401": {
+						"description": "Not authorized",
+						"content": {}
+					},
+					"404": {
+						"description": "Not valid ID",
+						"content": {}
+					}
+				}
+			},
+			"patch": {
+				"tags": [
+					"Favorite"
+				],
+				"summary": "Add recipe to favorite",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "recipeId",
+						"required": true,
+						"type": "string",
+						"description": "Recipe`s id"
+					}
+				],
+				"security": [
+					{
+						"Bearer": []
+					}
+				],
+				"responses": {
+					"201": {
+						"description": "Success",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/GetAllFavoriteResponse"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Bad request (invalid request body)",
+						"content": {}
+					},
+					"401": {
+						"description": "Not authorized",
+						"content": {}
+					},
+					"404": {
+						"description": "Not valid ID",
+						"content": {}
+					}
+				}
+			}
+		},
+		"/popular-recipe": {
+			"get": {
+				"tags": [
+					"Popular-recipe"
+				],
+				"summary": "Return array with 4-th top recipes.",
+				"parameters": [],
+				"security": [
+					{
+						"Bearer": []
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Success",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/GetTopRecipes"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Bad request (invalid request body)",
+						"content": {}
+					},
+					"401": {
+						"description": "Not authorized",
+						"content": {}
+					}
+				}
+			}
+		}
+	},
+	"components": {
+		"schemas": {
+			"RegistrationRequest": {
+				"type": "object",
+				"required": [
+					"name",
+					"email",
+					"password"
+				],
+				"properties": {
+					"name": {
+						"type": "string",
+						"description": "User's name"
+					},
+					"email": {
+						"type": "string",
+						"description": "User's email",
+						"format": "email"
+					},
+					"password": {
+						"type": "string",
+						"description": "User's password"
+					}
+				},
+				"example": {
+					"name": "Aaron Barnes",
+					"email": "aaron@gmail.com",
+					"password": "Qwe123"
+				}
+			},
+			"RegistrationResponse": {
+				"type": "object",
+				"properties": {
+					"name": {
+						"type": "string",
+						"description": "User's name",
+						"format": "Aaron Barnes"
+					},
+					"email": {
+						"type": "string",
+						"description": "User's email",
+						"format": "email"
+					},
+					"avatarURL": {
+						"type": "string",
+						"description": "User's avatar",
+						"example": "//www.gravatar.com/avatar/395df683fb7c0f1aad22dbf40031517a?s=200&d=identicon"
+					},
+					"token": {
+						"type": "string",
+						"description": "User's token",
+						"format": "JWT"
+					}
+				},
+				"example": {
+					"name": "Aaron Barnes",
+					"email": "aaron@gmail.com",
+					"avatarURL": "//www.gravatar.com/avatar/395df683fb7c0f1aad22dbf40031517a?s=200&d=identicon",
+					"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0ZWJlMjY0ZDJhZTdkYWJjYjViZTBkYiIsImlhdCI6MTY5MzQ2OTU0MiwiZXhwIjoxNjk1MjgzOTQyfQ.hcG4kTbunvFLj5_UoLe7tu9AK9wMX9BdkoSrA8oc97U"
+				}
+			},
+			"LoginRequest": {
+				"type": "object",
+				"required": [
+					"email",
+					"password"
+				],
+				"properties": {
+					"email": {
+						"type": "string",
+						"description": "User's email",
+						"format": "email"
+					},
+					"password": {
+						"type": "string",
+						"description": "User's password",
+						"example": "Qwe123"
+					}
+				},
+				"example": {
+					"email": "aaron@gmail.com",
+					"password": "Qwe123"
+				}
+			},
+			"LoginResponse": {
+				"type": "object",
+				"properties": {
+					"token": {
+						"type": "string",
+						"description": "User's token",
+						"format": "JWT"
+					},
+					"user": {
+						"type": "object",
+						"properties": {
+							"email": {
+								"type": "string",
+								"description": "User's email",
+								"format": "email"
+							}
+						}
+					}
+				},
+				"example": [
+					{
+						"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0ZWJlMjY0ZDJhZTdkYWJjYjViZTBkYiIsImlhdCI6MTY5MzQ2OTU0MiwiZXhwIjoxNjk1MjgzOTQyfQ.hcG4kTbunvFLj5_UoLe7tu9AK9wMX9BdkoSrA8oc97U",
+						"user": {
+							"email": "aaron@gmail.com"
+						}
+					}
+				]
+			},
+			"GetUserResponse": {
+				"type": "object",
+				"properties": {
+					"user": {
+						"type": "object",
+						"properties": {
+							"_id": {
+								"type": "string",
+								"description": "User's _id"
+							},
+							"name": {
+								"type": "string",
+								"description": "User's name"
+							},
+							"password": {
+								"type": "string",
+								"description": "User's password",
+								"format": "password"
+							},
+							"email": {
+								"type": "string",
+								"description": "User's email",
+								"format": "email"
+							},
+							"avatarURL": {
+								"type": "string",
+								"description": "User's avatar"
+							},
+							"subscribe": {
+								"type": "boolean",
+								"description": "User's subscribe"
+							},
+							"token": {
+								"type": "string",
+								"description": "User's token",
+								"format": "JWT"
+							}
+						}
+					}
+				},
+				"example": {
+					"user": {
+						"_id": "64ebe264d2ae7dabcb5be0db",
+						"name": "Aaron Barnes",
+						"password": "$2b$10$t566cThgNEGlsi.9d5HRi.ig/znXEKj4k4Nw2XdFJmRIvZ3gna.2y",
+						"email": "aaron@gmail.com",
+						"avatarURL": "//www.gravatar.com/avatar/395df683fb7c0f1aad22dbf40031517a?s=200&d=identicon",
+						"subscribe": false,
+						"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0ZWJlMjY0ZDJhZTdkYWJjYjViZTBkYiIsImlhdCI6MTY5MzQ2OTU0MiwiZXhwIjoxNjk1MjgzOTQyfQ.hcG4kTbunvFLj5_UoLe7tu9AK9wMX9BdkoSrA8oc97U"
+					}
+				}
+			},
+			"UpdateUserResponse": {
+				"type": "object",
+				"properties": {
+					"user": {
+						"type": "object",
+						"properties": {
+							"_id": {
+								"type": "string",
+								"description": "User's _id"
+							},
+							"name": {
+								"type": "string",
+								"description": "User's name"
+							},
+							"password": {
+								"type": "string",
+								"description": "User's password",
+								"format": "password"
+							},
+							"email": {
+								"type": "string",
+								"description": "User's email",
+								"format": "email"
+							},
+							"avatarURL": {
+								"type": "string",
+								"description": "User's avatar"
+							},
+							"subscribe": {
+								"type": "boolean",
+								"description": "User's subscribe"
+							},
+							"token": {
+								"type": "string",
+								"description": "User's token",
+								"format": "JWT"
+							}
+						}
+					}
+				},
+				"example": {
+					"user": {
+						"_id": "64ebe264d2ae7dabcb5be0db",
+						"name": "Aaron Barnes",
+						"password": "$2b$10$t566cThgNEGlsi.9d5HRi.ig/znXEKj4k4Nw2XdFJmRIvZ3gna.2y",
+						"email": "aaron@gmail.com",
+						"avatarURL": "//www.gravatar.com/avatar/395df683fb7c0f1aad22dbf40031517a?s=200&d=identicon",
+						"subscribe": false,
+						"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0ZWJlMjY0ZDJhZTdkYWJjYjViZTBkYiIsImlhdCI6MTY5MzQ2OTU0MiwiZXhwIjoxNjk1MjgzOTQyfQ.hcG4kTbunvFLj5_UoLe7tu9AK9wMX9BdkoSrA8oc97U"
+					}
+				}
+			},
+			"LogoutUserResponse": {
+				"type": "object",
+				"properties": {
+					"message": {
+						"type": "string",
+						"description": "Message"
+					}
+				},
+				"example": {
+					"message": "No Content"
+				}
+			},
+			"SubscribeUserRequest": {
+				"type": "object",
+				"required": [
+					"email"
+				],
+				"properties": {
+					"_id": {
+						"type": "string",
+						"description": "User's email"
+					}
+				},
+				"example": {
+					"email": "aaron@gmail.com"
+				}
+			},
+			"SubscribeUserResponse": {
+				"type": "object",
+				"properties": {
+					"message": {
+						"type": "string",
+						"description": "Message"
+					}
+				},
+				"example": {
+					"message": "Newsletter Subscribe sent"
+				}
+			},
+			"SearchResponse": {
+				"type": "object",
+				"properties": {
+					"cocktails": {
+						"type": "array",
+						"description": "Array of cocktails"
+					}
+				},
+				"example": {
+					"cocktails": [
+						{
+							"_id": "639b6de9ff77d221f190c50f",
+							"drink": "Quentin",
+							"drinkAlternate": null,
+							"tags": null,
+							"video": null,
+							"category": "Ordinary Drink",
+							"IBA": null,
+							"alcoholic": "Alcoholic",
+							"glass": "Cocktail glass",
+							"instructions": "In a shaker half-filled with ice cubes, combine the rum, Kahlua, and cream. Shake well. Strain into a cocktail glass and garnish with the nutmeg.",
+							"instructionsES": "En una coctelera llena hasta la mitad con cubitos de hielo, combine el ron, Kahlua y la crema. Agite bien. Colar en una copa de cóctel y decorar con la nuez moscada.",
+							"instructionsDE": "In einem Shaker, der halb mit Eiswürfeln gefüllt ist, Rum, Kahlua und Sahne mischen. Gut schütteln. In ein Cocktailglas abseihen und mit der Muskatnuss garnieren.",
+							"instructionsFR": "Dans un shaker à moitié rempli de glaçons, mélanger le rhum, le Kahlua et la crème. Bien agiter. Versez dans un verre à cocktail et décorez avec la noix de muscade.",
+							"instructionsIT": "In uno shaker riempito a metà con cubetti di ghiaccio, unire il rum, il Kahlua e la panna. Filtrare in una coppetta da cocktail e guarnire con la noce moscata. Agitare bene.",
+							"instructionsRU": "В шейкере, наполовину наполненном кубиками льда, смешайте ром, Калуа и сливки. Хорошо встряхнуть. Процедите в коктейльный бокал и украсьте мускатным орехом.",
+							"instructionsPL": "W shakerze wypełnionym do połowy kostkami lodu wymieszać rum, Kahlua i śmietanę. Dobrze wstrząsnąć. Przelej do kieliszka koktajlowego i udekoruj gałką muszkatołową.",
+							"instructionsUK": "У шейкері, наповненому наполовину кубиками льоду, змішайте ром, Калуа та вершки. Добре струсити. Процідіть у келих для коктейлю та прикрасьте мускатним горіхом.",
+							"drinkThumb": "http://res.cloudinary.com/dec1shvoo/image/upload/v1689167161/cocktails-v1/drinks/Quentin.jpg",
+							"ingredients": [
+								{
+									"title": "Dark rum",
+									"measure": "1 1/2 oz ",
+									"ingredientThumb": "http://res.cloudinary.com/dec1shvoo/image/upload/v1689169605/cocktails-v1/ingredient/Dark%20rum.png",
+									"thumb-medium": "http://res.cloudinary.com/dec1shvoo/image/upload/v1689169605/cocktails-v1/ingredient/Dark%20rum-Medium.png",
+									"thumb-small": "http://res.cloudinary.com/dec1shvoo/image/upload/v1689169605/cocktails-v1/ingredient/Dark%20rum-Small.png"
+								},
+								{
+									"title": "Kahlua",
+									"measure": "1/2 oz ",
+									"ingredientThumb": "http://res.cloudinary.com/dec1shvoo/image/upload/v1689169605/cocktails-v1/ingredient/Kahlua.png",
+									"thumb-medium": "http://res.cloudinary.com/dec1shvoo/image/upload/v1689169605/cocktails-v1/ingredient/Kahlua-Medium.png",
+									"thumb-small": "http://res.cloudinary.com/dec1shvoo/image/upload/v1689169605/cocktails-v1/ingredient/Kahlua-Small.png"
+								},
+								{
+									"title": "Light cream",
+									"measure": "1 oz "
+								},
+								{
+									"title": "Nutmeg",
+									"measure": "1/8 tsp grated "
+								}
+							],
+							"updatedAt": "2023-08-30T20:46:19.461Z",
+							"usersId": [
+								"64eae6b73b8a2cf97c431fd7",
+								"64eb0a1d3fa4384dcb1f8fdf"
+							]
+						}
+					],
+					"totalPages": 1,
+					"totalCount": 1,
+					"currentPage": "1"
+				}
+			},
+			"SearchByCategoryResponse": {
+				"type": "array",
+				"properties": {
+					"categoryName": {
+						"type": "object",
+						"description": "Object of cateogory",
+						"properties": {
+							"userId": {
+								"type": "array",
+								"description": "Array of users id"
+							},
+							"_id": {
+								"type": "string",
+								"description": "Cocktail _id"
+							},
+							"drink": {
+								"type": "string",
+								"description": "Name of cocktail"
+							},
+							"category": {
+								"type": "string",
+								"description": "Name of cocktail category"
+							},
+							"alcoholic": {
+								"type": "string",
+								"description": "Type of cocktail"
+							},
+							"glass": {
+								"type": "string",
+								"description": "Type of glass"
+							},
+							"instructions": {
+								"type": "string",
+								"description": "Instructions how cooking cocktail"
+							},
+							"drinkThumb": {
+								"type": "string",
+								"description": "link to cocktail image"
+							},
+							"ingredients": {
+								"type": "array",
+								"description": "Array of object with cocktail ingredients"
+							}
+						}
+					}
+				},
+				"example": [
+					{
+						"usersId": [],
+						"_id": "639b6de9ff77d221f190c558",
+						"drink": "Pineapple Gingerale Smoothie",
+						"drinkAlternate": null,
+						"tags": null,
+						"video": null,
+						"category": "Other/Unknown",
+						"IBA": null,
+						"alcoholic": "Non alcoholic",
+						"glass": "Highball Glass",
+						"instructions": "Throw everything into a blender and liquify.",
+						"instructionsES": "Echar todo en una licuadora y licuar.",
+						"instructionsDE": "Alles in einen Mixer geben und aufschlagen.",
+						"instructionsFR": "Mettre le tout dans un blender et liquéfier.",
+						"instructionsIT": "Getta tutto in un frullatore e liquida.",
+						"instructionsRU": "Все бросить в блендер и измельчить.",
+						"instructionsPL": "Wrzuć wszystko do blendera i upłynnij.",
+						"instructionsUK": "Киньте все в блендер і перемішайте.",
+						"drinkThumb": "https://res.cloudinary.com/dec1shvoo/image/upload/v1689167144/cocktails-v1/drinks/Pineapple_Gingerale_Smoothie.jpg",
+						"ingredients": [
+							{
+								"title": "Ginger",
+								"measure": "1/4 inch ",
+								"ingredientThumb": "http://res.cloudinary.com/dec1shvoo/image/upload/v1689169605/cocktails-v1/ingredient/Ginger.png",
+								"thumb-medium": "http://res.cloudinary.com/dec1shvoo/image/upload/v1689169605/cocktails-v1/ingredient/Ginger-Medium.png",
+								"thumb-small": "http://res.cloudinary.com/dec1shvoo/image/upload/v1689169605/cocktails-v1/ingredient/Ginger-Small.png"
+							},
+							{
+								"title": "Pineapple",
+								"measure": "1/2 "
+							}
+						]
+					}
+				]
+			},
+			"GetAllOwnRecipeResponse": {
+				"type": "array",
+				"properties": {
+					"categoryName": {
+						"type": "object",
+						"description": "Object of own`s recipes",
+						"properties": {
+							"drink": {
+								"type": "string",
+								"description": "Name of cocktail"
+							},
+							"drinkAlternate": {
+								"type": "string"
+							},
+							"tags": {
+								"type": "string"
+							},
+							"video": {
+								"type": "string"
+							},
+							"category": {
+								"type": "string",
+								"description": "Name of cocktail category"
+							},
+							"IBA": {
+								"type": "string"
+							},
+							"alcoholic": {
+								"type": "string",
+								"description": "Type of cocktail"
+							},
+							"glass": {
+								"type": "string",
+								"description": "Type of glass"
+							},
+							"instructions": {
+								"type": "string",
+								"description": "Instructions how cooking cocktail"
+							},
+							"drinkThumb": {
+								"type": "string",
+								"description": "link to cocktail image"
+							},
+							"describe": {
+								"type": "string",
+								"description": "Information about cocktail"
+							},
+							"creatorId": {
+								"type": "string",
+								"description": "User`s id, whose create recipe"
+							},
+							"ingredients": {
+								"type": "array",
+								"description": "Array of object with cocktail ingredients"
+							},
+							"usersId": {
+								"type": "array",
+								"description": "Array of users id"
+							},
+							"_id": {
+								"type": "string",
+								"description": "Cocktail _id"
+							}
+						}
+					}
+				},
+				"example": [
+					{
+						"_id": {
+							"$oid": "64ef9548de36dea225953fb6"
+						},
+						"drink": "Custom_Quentin",
+						"drinkAlternate": null,
+						"tags": null,
+						"video": null,
+						"category": "Beer",
+						"IBA": null,
+						"alcoholic": null,
+						"glass": "Ordinary Drink",
+						"instructions": "Take and drink",
+						"drinkThumb": "http://res.cloudinary.com/dec1shvoo/image/upload/v1689167161/cocktails-v1/drinks/Quentin.jpg",
+						"describe": "My first cocktail",
+						"creatorId": "64eae6b73b8a2cf97c431fd7",
+						"ingredients": [
+							{
+								"title": "Dark rum",
+								"measure": "1 1/2 oz ",
+								"ingredientThumb": "http://res.cloudinary.com/dec1shvoo/image/upload/v1689169605/cocktails-v1/ingredient/Dark%20rum.png",
+								"thumb-medium": "http://res.cloudinary.com/dec1shvoo/image/upload/v1689169605/cocktails-v1/ingredient/Dark%20rum-Medium.png",
+								"thumb-small": "http://res.cloudinary.com/dec1shvoo/image/upload/v1689169605/cocktails-v1/ingredient/Dark%20rum-Small.png"
+							},
+							{
+								"title": "Kahlua",
+								"measure": "1/2 oz ",
+								"ingredientThumb": "http://res.cloudinary.com/dec1shvoo/image/upload/v1689169605/cocktails-v1/ingredient/Kahlua.png",
+								"thumb-medium": "http://res.cloudinary.com/dec1shvoo/image/upload/v1689169605/cocktails-v1/ingredient/Kahlua-Medium.png",
+								"thumb-small": "http://res.cloudinary.com/dec1shvoo/image/upload/v1689169605/cocktails-v1/ingredient/Kahlua-Small.png"
+							}
+						],
+						"createdAt": {
+							"$date": "2023-08-30T19:15:20.088Z"
+						},
+						"updatedAt": {
+							"$date": "2023-08-30T20:48:58.679Z"
+						},
+						"usersId": [
+							"64eae6b73b8a2cf97c431fd7",
+							"64eb0a1d3fa4384dcb1f8fdf"
+						]
+					}
+				]
+			},
+			"AddRecipeResponse": {
+				"type": "object",
+				"description": "Object of own`s recipes",
+				"properties": {
+					"drink": {
+						"type": "string",
+						"description": "Name of cocktail"
+					},
+					"drinkAlternate": {
+						"type": "string"
+					},
+					"tags": {
+						"type": "string"
+					},
+					"video": {
+						"type": "string"
+					},
+					"category": {
+						"type": "string",
+						"description": "Name of cocktail category"
+					},
+					"IBA": {
+						"type": "string"
+					},
+					"alcoholic": {
+						"type": "string",
+						"description": "Type of cocktail"
+					},
+					"glass": {
+						"type": "string",
+						"description": "Type of glass"
+					},
+					"instructions": {
+						"type": "string",
+						"description": "Instructions how cooking cocktail"
+					},
+					"drinkThumb": {
+						"type": "string",
+						"description": "link to cocktail image"
+					},
+					"describe": {
+						"type": "string",
+						"description": "Information about cocktail"
+					},
+					"creatorId": {
+						"type": "string",
+						"description": "User`s id, whose create recipe"
+					},
+					"ingredients": {
+						"type": "array",
+						"description": "Array of object with cocktail ingredients"
+					},
+					"usersId": {
+						"type": "array",
+						"description": "Array of users id"
+					},
+					"_id": {
+						"type": "string",
+						"description": "Cocktail _id"
+					}
+				},
+				"example": {
+					"_id": {
+						"$oid": "64ef9548de36dea225953fb6"
+					},
+					"drink": "Custom_Quentin",
+					"drinkAlternate": null,
+					"tags": null,
+					"video": null,
+					"category": "Beer",
+					"IBA": null,
+					"alcoholic": null,
+					"glass": "Ordinary Drink",
+					"instructions": "Take and drink",
+					"drinkThumb": "http://res.cloudinary.com/dec1shvoo/image/upload/v1689167161/cocktails-v1/drinks/Quentin.jpg",
+					"describe": "My first cocktail",
+					"creatorId": "64eae6b73b8a2cf97c431fd7",
+					"ingredients": [
+						{
+							"title": "Dark rum",
+							"measure": "1 1/2 oz ",
+							"ingredientThumb": "http://res.cloudinary.com/dec1shvoo/image/upload/v1689169605/cocktails-v1/ingredient/Dark%20rum.png",
+							"thumb-medium": "http://res.cloudinary.com/dec1shvoo/image/upload/v1689169605/cocktails-v1/ingredient/Dark%20rum-Medium.png",
+							"thumb-small": "http://res.cloudinary.com/dec1shvoo/image/upload/v1689169605/cocktails-v1/ingredient/Dark%20rum-Small.png"
+						},
+						{
+							"title": "Kahlua",
+							"measure": "1/2 oz ",
+							"ingredientThumb": "http://res.cloudinary.com/dec1shvoo/image/upload/v1689169605/cocktails-v1/ingredient/Kahlua.png",
+							"thumb-medium": "http://res.cloudinary.com/dec1shvoo/image/upload/v1689169605/cocktails-v1/ingredient/Kahlua-Medium.png",
+							"thumb-small": "http://res.cloudinary.com/dec1shvoo/image/upload/v1689169605/cocktails-v1/ingredient/Kahlua-Small.png"
+						}
+					],
+					"createdAt": {
+						"$date": "2023-08-30T19:15:20.088Z"
+					},
+					"updatedAt": {
+						"$date": "2023-08-30T20:48:58.679Z"
+					},
+					"usersId": [
+						"64eae6b73b8a2cf97c431fd7",
+						"64eb0a1d3fa4384dcb1f8fdf"
+					]
+				}
+			},
+			"AddRecipeRequest": {
+				"type": "object",
+				"required": [
+					"drink",
+					"category",
+					"glass",
+					"ingredients",
+					"instructions"
+				],
+				"properties": {
+					"drink": {
+						"type": "string",
+						"description": "Name of cocktail"
+					},
+					"drinkAlternate": {
+						"type": "string"
+					},
+					"tags": {
+						"type": "string"
+					},
+					"video": {
+						"type": "string"
+					},
+					"category": {
+						"type": "string",
+						"description": "Name of cocktail category"
+					},
+					"IBA": {
+						"type": "string"
+					},
+					"alcoholic": {
+						"type": "string",
+						"description": "Type of cocktail"
+					},
+					"glass": {
+						"type": "string",
+						"description": "Type of glass"
+					},
+					"instructions": {
+						"type": "string",
+						"description": "Instructions how cooking cocktail"
+					},
+					"drinkThumb": {
+						"type": "string",
+						"description": "link to cocktail image"
+					},
+					"describe": {
+						"type": "string",
+						"description": "Information about cocktail"
+					},
+					"ingredients": {
+						"type": "array",
+						"description": "Array of object with cocktail ingredients"
+					},
+					"ownRecipesPhoto": {
+						"type": "string",
+						"format": "binary",
+						"description": "Recipe's image"
+					}
+				}
+			},
+			"GetAllFavoriteResponse": {
+				"type": "array",
+				"properties": {
+					"categoryName": {
+						"type": "object",
+						"description": "Object of favorite`s recipes",
+						"properties": {
+							"drink": {
+								"type": "string",
+								"description": "Name of cocktail"
+							},
+							"drinkAlternate": {
+								"type": "string"
+							},
+							"tags": {
+								"type": "string"
+							},
+							"video": {
+								"type": "string"
+							},
+							"category": {
+								"type": "string",
+								"description": "Name of cocktail category"
+							},
+							"IBA": {
+								"type": "string"
+							},
+							"alcoholic": {
+								"type": "string",
+								"description": "Type of cocktail"
+							},
+							"glass": {
+								"type": "string",
+								"description": "Type of glass"
+							},
+							"instructions": {
+								"type": "string",
+								"description": "Instructions how cooking cocktail"
+							},
+							"drinkThumb": {
+								"type": "string",
+								"description": "link to cocktail image"
+							},
+							"creatorId": {
+								"type": "string",
+								"description": "User`s id, whose create recipe"
+							},
+							"usersId": {
+								"type": "array",
+								"description": "Array of users id"
+							},
+							"_id": {
+								"type": "string",
+								"description": "Cocktail _id"
+							}
+						}
+					}
+				},
+				"example": [
+					{
+						"_id": {
+							"$oid": "64ef9548de36dea225953fb6"
+						},
+						"drink": "Custom_Quentin",
+						"drinkAlternate": null,
+						"tags": null,
+						"video": null,
+						"category": "Beer",
+						"IBA": null,
+						"alcoholic": null,
+						"glass": "Ordinary Drink",
+						"instructions": "Take and drink",
+						"drinkThumb": "http://res.cloudinary.com/dec1shvoo/image/upload/v1689167161/cocktails-v1/drinks/Quentin.jpg",
+						"describe": "My first cocktail",
+						"ingredients": [
+							{
+								"title": "Dark rum",
+								"measure": "1 1/2 oz ",
+								"ingredientThumb": "http://res.cloudinary.com/dec1shvoo/image/upload/v1689169605/cocktails-v1/ingredient/Dark%20rum.png",
+								"thumb-medium": "http://res.cloudinary.com/dec1shvoo/image/upload/v1689169605/cocktails-v1/ingredient/Dark%20rum-Medium.png",
+								"thumb-small": "http://res.cloudinary.com/dec1shvoo/image/upload/v1689169605/cocktails-v1/ingredient/Dark%20rum-Small.png"
+							},
+							{
+								"title": "Kahlua",
+								"measure": "1/2 oz ",
+								"ingredientThumb": "http://res.cloudinary.com/dec1shvoo/image/upload/v1689169605/cocktails-v1/ingredient/Kahlua.png",
+								"thumb-medium": "http://res.cloudinary.com/dec1shvoo/image/upload/v1689169605/cocktails-v1/ingredient/Kahlua-Medium.png",
+								"thumb-small": "http://res.cloudinary.com/dec1shvoo/image/upload/v1689169605/cocktails-v1/ingredient/Kahlua-Small.png"
+							}
+						],
+						"createdAt": {
+							"$date": "2023-08-30T19:15:20.088Z"
+						},
+						"updatedAt": {
+							"$date": "2023-08-30T20:48:58.679Z"
+						},
+						"usersId": [
+							"64eae6b73b8a2cf97c431fd7",
+							"64eb0a1d3fa4384dcb1f8fdf"
+						]
+					}
+				]
+			},
+			"PatchFavoriteResponse": {
+				"type": "object",
+				"description": "Object of favorite`s recipes",
+				"properties": {
+					"drink": {
+						"type": "string",
+						"description": "Name of cocktail"
+					},
+					"drinkAlternate": {
+						"type": "string"
+					},
+					"tags": {
+						"type": "string"
+					},
+					"video": {
+						"type": "string"
+					},
+					"category": {
+						"type": "string",
+						"description": "Name of cocktail category"
+					},
+					"IBA": {
+						"type": "string"
+					},
+					"alcoholic": {
+						"type": "string",
+						"description": "Type of cocktail"
+					},
+					"glass": {
+						"type": "string",
+						"description": "Type of glass"
+					},
+					"instructions": {
+						"type": "string",
+						"description": "Instructions how cooking cocktail"
+					},
+					"drinkThumb": {
+						"type": "string",
+						"description": "link to cocktail image"
+					},
+					"usersId": {
+						"type": "array",
+						"description": "Array of users id"
+					},
+					"_id": {
+						"type": "string",
+						"description": "Cocktail _id"
+					}
+				},
+				"example": [
+					{
+						"_id": {
+							"$oid": "64ef9548de36dea225953fb6"
+						},
+						"drink": "Custom_Quentin",
+						"drinkAlternate": null,
+						"tags": null,
+						"video": null,
+						"category": "Beer",
+						"IBA": null,
+						"alcoholic": null,
+						"glass": "Ordinary Drink",
+						"instructions": "Take and drink",
+						"drinkThumb": "http://res.cloudinary.com/dec1shvoo/image/upload/v1689167161/cocktails-v1/drinks/Quentin.jpg",
+						"describe": "My first cocktail",
+						"ingredients": [
+							{
+								"title": "Dark rum",
+								"measure": "1 1/2 oz ",
+								"ingredientThumb": "http://res.cloudinary.com/dec1shvoo/image/upload/v1689169605/cocktails-v1/ingredient/Dark%20rum.png",
+								"thumb-medium": "http://res.cloudinary.com/dec1shvoo/image/upload/v1689169605/cocktails-v1/ingredient/Dark%20rum-Medium.png",
+								"thumb-small": "http://res.cloudinary.com/dec1shvoo/image/upload/v1689169605/cocktails-v1/ingredient/Dark%20rum-Small.png"
+							},
+							{
+								"title": "Kahlua",
+								"measure": "1/2 oz ",
+								"ingredientThumb": "http://res.cloudinary.com/dec1shvoo/image/upload/v1689169605/cocktails-v1/ingredient/Kahlua.png",
+								"thumb-medium": "http://res.cloudinary.com/dec1shvoo/image/upload/v1689169605/cocktails-v1/ingredient/Kahlua-Medium.png",
+								"thumb-small": "http://res.cloudinary.com/dec1shvoo/image/upload/v1689169605/cocktails-v1/ingredient/Kahlua-Small.png"
+							}
+						],
+						"createdAt": {
+							"$date": "2023-08-30T19:15:20.088Z"
+						},
+						"updatedAt": {
+							"$date": "2023-08-30T20:48:58.679Z"
+						},
+						"usersId": [
+							"64eae6b73b8a2cf97c431fd7",
+							"64eb0a1d3fa4384dcb1f8fdf"
+						]
+					}
+				]
+			},
+			"GetTopRecipes": {
+				"type": "array",
+				"properties": {
+					"categoryName": {
+						"type": "object",
+						"description": "Object of top`s recipes",
+						"properties": {
+							"drink": {
+								"type": "string",
+								"description": "Name of cocktail"
+							},
+							"instructions": {
+								"type": "string",
+								"description": "Instructions how cooking cocktail"
+							},
+							"drinkThumb": {
+								"type": "string",
+								"description": "link to cocktail image"
+							},
+							"_id": {
+								"type": "string",
+								"description": "Cocktail _id"
+							},
+							"usersId": {
+								"type": "array",
+								"description": "Array of users id"
+							},
+							"users_count": {
+								"type": "integer",
+								"description": "Number of likes in cocktail"
+							}
+						}
+					}
+				},
+				"example": [
+					{
+						"_id": {
+							"$oid": "64ef9548de36dea225953fb6"
+						},
+						"drink": "Custom_Quentin",
+						"instructions": "Take and drink",
+						"drinkThumb": "http://res.cloudinary.com/dec1shvoo/image/upload/v1689167161/cocktails-v1/drinks/Quentin.jpg",
+						"usersId": [
+							"64eae6b73b8a2cf97c431fd7",
+							"64eb0a1d3fa4384dcb1f8fdf"
+						],
+						"users_count": 3
+					}
+				]
+			},
+			"CategoriesListResponse": {
+				"type": "array",
+				"properties": {
+					"category": {
+						"type": "object",
+						"description": "Object of cocktails category",
+						"properties": {
+							"_id": {
+								"type": "string",
+								"description": "Category _id"
+							},
+							"category": {
+								"type": "string",
+								"description": "Category name"
+							}
+						}
+					}
+				},
+				"example": [
+					{
+						"_id": "64e739882dbe162adf32dcc1",
+						"category": "Beer"
+					}
+				]
+			},
+			"GetGlassResponse": {
+				"type": "array",
+				"properties": {
+					"glassObject": {
+						"type": "object",
+						"_id": {
+							"type": "string",
+							"description": "Glass _id"
+						},
+						"glass": {
+							"type": "string",
+							"description": "Glass name"
+						}
+					}
+				},
+				"example": [
+					{
+						"_id": "64e728b82dbe162adf32dcad",
+						"glass": "Beer Glass"
+					},
+					{
+						"_id": "64e728b82dbe162adf32dcaa",
+						"glass": "Beer mug"
+					}
+				]
+			},
+			"GetIngredientsListResponse": {
+				"type": "array",
+				"properties": {
+					"ingredientObject": {
+						"type": "object",
+						"_id": {
+							"type": "string",
+							"description": "Ingredient _id"
+						},
+						"title": {
+							"type": "string",
+							"description": "Ingredient title"
+						},
+						"ingredientThumb": {
+							"type": "string",
+							"description": "Ingredient image"
+						},
+						"thumb-medium": {
+							"type": "string",
+							"description": "Ingredient image medium"
+						},
+						"thumb-small": {
+							"type": "string",
+							"description": "Ingredient image small"
+						}
+					}
+				},
+				"example": [
+					{
+						"_id": "64e619c32dbe162adf32dbdf",
+						"title": "Grapefruit juice",
+						"ingredientThumb": "http://res.cloudinary.com/dec1shvoo/image/upload/v1689169605/cocktails-v1/ingredient/Grapefruit%20juice.png",
+						"thumb-medium": "http://res.cloudinary.com/dec1shvoo/image/upload/v1689169605/cocktails-v1/ingredient/Grapefruit%20juice-Medium.png",
+						"thumb-small": "http://res.cloudinary.com/dec1shvoo/image/upload/v1689169605/cocktails-v1/ingredient/Grapefruit%20juice-Small.png"
+					},
+					{
+						"_id": "64e619c32dbe162adf32dbbf",
+						"title": "Triple sec",
+						"ingredientThumb": "http://res.cloudinary.com/dec1shvoo/image/upload/v1689169611/cocktails-v1/ingredient/Triple%20sec.png",
+						"thumb-medium": "http://res.cloudinary.com/dec1shvoo/image/upload/v1689169611/cocktails-v1/ingredient/Triple%20sec-Medium.png",
+						"thumb-small": "http://res.cloudinary.com/dec1shvoo/image/upload/v1689169611/cocktails-v1/ingredient/Triple%20sec-Small.png"
+					}
+				]
+			},
+			"SearchRecipeByIdResponse": {
+				"type": "object",
+				"properties": {
+					"userId": {
+						"type": "array",
+						"description": "Array of users id"
+					},
+					"_id": {
+						"type": "string",
+						"description": "Cocktail _id"
+					},
+					"drink": {
+						"type": "string",
+						"description": "Name of cocktail"
+					},
+					"category": {
+						"type": "string",
+						"description": "Name of cocktail category"
+					},
+					"alcoholic": {
+						"type": "string",
+						"description": "Type of cocktail"
+					},
+					"glass": {
+						"type": "string",
+						"description": "Type of glass"
+					},
+					"instructions": {
+						"type": "string",
+						"description": "Instructions how cooking cocktail"
+					},
+					"drinkThumb": {
+						"type": "string",
+						"description": "link to cocktail image"
+					},
+					"ingredients": {
+						"type": "array",
+						"description": "Array of object with cocktail ingredients"
+					}
+				},
+				"example": {
+					"usersId": [],
+					"_id": "639b6de9ff77d221f190c558",
+					"drink": "Passion Fruit Martini",
+					"drinkAlternate": null,
+					"tags": null,
+					"video": null,
+					"category": "Cocktail",
+					"IBA": null,
+					"alcoholic": "Alcoholic",
+					"glass": "Cocktail glass",
+					"instructions": "Pour all ingredients into a glass and stir. Garnish with half a passion fruit piece.",
+					"instructionsES": "Vierta todos los ingredientes en un vaso y revuelva. Decorar con media pieza de maracuyá.",
+					"instructionsDE": "Alle Zutaten in ein Glas geben und umrühren. Mit einem halben Passionsfruchtstück garnieren.",
+					"instructionsFR": "Verser tous les ingrédients dans un verre et remuer. Garnir d'un demi-morceau de fruit de la passion.",
+					"instructionsIT": "Versare tutti gli ingredienti in un bicchiere e mescolare. Guarnire con mezzo pezzo di frutto della passione.",
+					"instructionsRU": "Налейте все ингредиенты в стакан и перемешайте. Украсьте половиной кусочка маракуйи.",
+					"instructionsPL": "Wszystkie składniki wlej do szklanki i wymieszaj. Udekoruj połową kawałka marakui.",
+					"instructionsUK": "Перелийте всі інгредієнти в склянку і перемішайте. Прикрасьте половинкою шматочка маракуйї.",
+					"drinkThumb": "https://res.cloudinary.com/dec1shvoo/image/upload/v1689167144/cocktails-v1/drinks/Passion_Fruit_Martini.jpg",
+					"ingredients": [
+						{
+							"title": "Vodka",
+							"measure": "1 shot",
+							"ingredientThumb": "http://res.cloudinary.com/dec1shvoo/image/upload/v1689169611/cocktails-v1/ingredient/Vodka.png",
+							"thumb-medium": "http://res.cloudinary.com/dec1shvoo/image/upload/v1689169611/cocktails-v1/ingredient/Vodka-Medium.png",
+							"thumb-small": "http://res.cloudinary.com/dec1shvoo/image/upload/v1689169611/cocktails-v1/ingredient/Vodka-Small.png"
+						},
+						{
+							"title": "Sugar Syrup",
+							"measure": "1/2 shot"
+						},
+						{
+							"title": "Passion fruit juice",
+							"measure": "Full Glass"
+						}
+					]
+				}
+			},
+			"MainPageResponse": {
+				"type": "object",
+				"properties": {
+					"categoryName": {
+						"type": "object",
+						"description": "Object of cateogory",
+						"properties": {
+							"_id": {
+								"type": "string",
+								"description": "Cocktail _id"
+							},
+							"drink": {
+								"type": "string",
+								"description": "Name of cocktail"
+							},
+							"category": {
+								"type": "string",
+								"description": "Name of cocktail category"
+							},
+							"drinkThumb": {
+								"type": "string",
+								"description": "link to cocktail image"
+							},
+							"ingredients": {
+								"type": "array",
+								"description": "Array of object with cocktail ingredients"
+							}
+						}
+					}
+				},
+				"example": {
+					"category": [
+						{
+							"_id": "639b6de9ff77d221f190c53d",
+							"drink": "Owen's Grandmother's Revenge",
+							"category": "Ordinary Drink",
+							"drinkThumb": "https://res.cloudinary.com/dec1shvoo/image/upload/v1689167160/cocktails-v1/drinks/Owen%27s_Grandmother%27s_Revenge.jpg",
+							"ingredients": [
+								{
+									"title": "Whiskey",
+									"measure": "12 oz ",
+									"ingredientThumb": "http://res.cloudinary.com/dec1shvoo/image/upload/v1689169615/cocktails-v1/ingredient/Whiskey.png",
+									"thumb-medium": "http://res.cloudinary.com/dec1shvoo/image/upload/v1689169615/cocktails-v1/ingredient/Whiskey-Medium.png",
+									"thumb-small": "http://res.cloudinary.com/dec1shvoo/image/upload/v1689169615/cocktails-v1/ingredient/Whiskey-Small.png"
+								},
+								{
+									"title": "Beer",
+									"measure": "12 oz "
+								},
+								{
+									"title": "Lemonade",
+									"measure": "12 oz frozen ",
+									"ingredientThumb": "http://res.cloudinary.com/dec1shvoo/image/upload/v1689169610/cocktails-v1/ingredient/Lemonade.png",
+									"thumb-medium": "http://res.cloudinary.com/dec1shvoo/image/upload/v1689169610/cocktails-v1/ingredient/Lemonade-Medium.png",
+									"thumb-small": "http://res.cloudinary.com/dec1shvoo/image/upload/v1689169610/cocktails-v1/ingredient/Lemonade-Small.png"
+								},
+								{
+									"title": "Ice",
+									"measure": "1 cup crushed "
+								}
+							]
+						}
+					]
+				}
+			}
+		},
+		"securitySchemes": {
+			"Bearer": {
+				"type": "http",
+				"scheme": "bearer",
+				"bearerFormat": "JWT"
+			}
+		}
+	}
 }
