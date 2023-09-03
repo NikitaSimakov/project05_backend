@@ -5,7 +5,7 @@ import {
   getRecipesForMainPage,
   getRecipesByCategory,
 } from "../../controllers/recipes-controller.js";
-import {  isIdValid, authenticate } from "../../middlewares/index.js";
+import { isIdValid, authenticate } from "../../middlewares/index.js";
 
 import { getCategories } from "../../controllers/categories-controller.js";
 
