@@ -5,4 +5,5 @@ import { authenticate } from "../../middlewares/index.js";
 
 export const glassRouter = express.Router();
 
-glassRouter.get("/", authenticate, ctrlWrapper(getGlasses));
+glassRouter.get("/",  ctrlWrapper(getGlasses));
+// authenticate,
