@@ -38,14 +38,10 @@ const register = async (req, res) => {
 		avatarURL,
 	});
 
-	const token = jwt.sign({ userId: newUser._id }, SECRET_KEY, { expiresIn: "3w" });
-	await User.findOneAndUpdate({email}, { token });
-
 	res.status(201).json({
 		name: newUser.name,
 		email: newUser.email,
-		avatarURL,
-		token
+		avatarURL
 	});
 };
 

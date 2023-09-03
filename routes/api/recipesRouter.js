@@ -13,21 +13,21 @@ export const recipesRouter = express.Router();
 
 recipesRouter.get(
   "/main-page",
-  // authenticate,
+  authenticate,
   ctrlWrapper(getRecipesForMainPage)
 );
 
-recipesRouter.get("/category-list",  ctrlWrapper(getCategories));
-// authenticate,
+recipesRouter.get("/category-list", authenticate, ctrlWrapper(getCategories));
+
 recipesRouter.get(
   "/:id([a-z0-9_-]{24})",
-  // authenticate,
+  authenticate,
   isIdValid,
   ctrlWrapper(getRecipeById)
 );
 
 recipesRouter.get(
   "/:category*",
-  // authenticate,
+  authenticate,
   ctrlWrapper(getRecipesByCategory)
 );
