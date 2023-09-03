@@ -5,7 +5,7 @@ import {
   getRecipesForMainPage,
   getRecipesByCategory,
 } from "../../controllers/recipes-controller.js";
-import {  isIdValid, authenticate } from "../../middlewares/index.js";
+import { isIdValid, authenticate } from "../../middlewares/index.js";
 
 import { getCategories } from "../../controllers/categories-controller.js";
 
@@ -17,11 +17,11 @@ recipesRouter.get(
   ctrlWrapper(getRecipesForMainPage)
 );
 
-recipesRouter.get("/category-list",  ctrlWrapper(getCategories));
+recipesRouter.get("/category-list", ctrlWrapper(getCategories));
 // authenticate,
 recipesRouter.get(
   "/:id([a-z0-9_-]{24})",
-  // authenticate,
+  authenticate,
   isIdValid,
   ctrlWrapper(getRecipeById)
 );
