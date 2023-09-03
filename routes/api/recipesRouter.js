@@ -21,7 +21,7 @@ recipesRouter.get("/category-list",  ctrlWrapper(getCategories));
 // authenticate,
 recipesRouter.get(
   "/:id([a-z0-9_-]{24})",
-  authenticate,
+  // authenticate,
   isIdValid,
   ctrlWrapper(getRecipeById)
 );

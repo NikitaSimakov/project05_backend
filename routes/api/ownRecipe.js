@@ -6,7 +6,7 @@ import recipeSchemas from "../../schemas/recipe-schemas.js"
 
 const ownRecipeRouter = express.Router()
 
-ownRecipeRouter.use(authenticate)
+// ownRecipeRouter.use(authenticate)
 
 ownRecipeRouter.post("/", upload.single("recipePhoto"), isEmptyBody, validateBody(recipeSchemas.addRecipeSchema), recipeControllers.addRecipeControllers) //add new recipe
 
