@@ -6,14 +6,14 @@ const addFavoriteController = async (req, res) => {
 	const { recipeId } = req.params
 	const userId = req.user._id.toString()
 
-	const user = await Recipe.findById(recipeId)
-	if (!user) {
+	const recipe = await Recipe.findById(recipeId)
+	if (!recipe) {
 		throw HttpError(404, `You haven't recipe with id: ${recipeId}!`)
 	}
-	if (user.usersId.includes(userId)) {
+	if (recipe.usersId.includes(userId)) {
 		throw HttpError(409, `You added recipe with id: ${recipeId} to favorite!`)
 	}
-	if (user.creatorId === userId) {
+	if (recipe.creatorId === userId) {
 		throw HttpError(400, `You cannot add own recipe with id: ${recipeId} to favorite!`)
 	}
 
