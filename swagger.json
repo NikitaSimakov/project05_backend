@@ -139,7 +139,7 @@
 				}
 			}
 		},
-		"/auth/:id": {
+		"/auth": {
 			"get": {
 				"tags": [
 					"Auth"
@@ -148,20 +148,11 @@
 				"parameters": [
 					{
 						"in": "query",
-						"name": "id",
+						"name": "user",
 						"schema": {
-							"type": "string"
+							"type": "object"
 						},
-						"description": "User's ID"
-					},
-					{
-						"in": "query",
-						"name": "email",
-						"schema": {
-							"type": "string"
-						},
-						"format": "email",
-						"description": "User's email"
+						"description": "User's object"
 					}
 				],
 				"security": [
@@ -197,17 +188,7 @@
 					"Auth"
 				],
 				"summary": "Update user's name or avatar",
-				"parameters": [
-					{
-						"in": "query",
-						"name": "_id",
-						"required": true,
-						"schema": {
-							"type": "string"
-						},
-						"description": "User's ID"
-					}
-				],
+				"parameters": [],
 				"security": [
 					{
 						"Bearer": []
@@ -699,7 +680,7 @@
 				}
 			}
 		},
-		"/own/:recipeId": {
+		"/own/{id}": {
 			"delete": {
 				"tags": [
 					"Own"
@@ -786,7 +767,7 @@
 				}
 			}
 		},
-		"/favorite/:recipeId": {
+		"/favorite/{recipeId}": {
 			"delete": {
 				"tags": [
 					"Favorite"

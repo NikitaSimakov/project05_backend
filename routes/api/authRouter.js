@@ -12,7 +12,7 @@ authRouter.post("/register", validateBody(userSchemas.registerSchema, "Incorrect
 
 authRouter.post("/login", validateBody(userSchemas.loginSchema, "Incorrectly filled fields"), authController.logIn);
 
-authRouter.get("/:id", authenticate, authController.getUser);
+authRouter.get("/", authenticate, authController.getUser);
 
 authRouter.patch("/update", authenticate, upload.single("avatar"), validateBody(userSchemas.updateSchema, "Sorry, update failed your profile"), authController.updateUser);
 

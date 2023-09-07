@@ -8,14 +8,18 @@ const registerSchema = Joi.object({
   password: Joi.string().pattern(passwordRegexp).required().messages({
     'string.pattern.base': 'Password must contain at least 1 uppercase letter, 1 lowercase letter, and 1 number',
   }),
-  email: Joi.string().pattern(emailRegexp).required(),
+  email: Joi.string().pattern(emailRegexp).required().messages({
+    'string.pattern.base': 'Invalid email format. Please enter a valid email address.It must contain the symbol @.',
+  }),
 });
 
 const loginSchema = Joi.object({
   password: Joi.string().pattern(passwordRegexp).required().messages({
     'string.pattern.base': 'Password must contain at least 1 uppercase letter, 1 lowercase letter, and 1 number',
   }),
-  email: Joi.string().pattern(emailRegexp).required(),
+  email: Joi.string().pattern(emailRegexp).required().messages({
+    'string.pattern.base': 'Invalid email format. Please enter a valid email address.It must contain the symbol @.',
+  }),
 });
 
 const updateSchema = Joi.object({
@@ -24,7 +28,9 @@ const updateSchema = Joi.object({
 });
 
 const userEmailSchema = Joi.object({
-  email: Joi.string().pattern(emailRegexp).required(),
+  email: Joi.string().pattern(emailRegexp).required().messages({
+    'string.pattern.base': 'Invalid email format. Please enter a valid email address.It must contain the symbol @.',
+  }),
 });
 
 export default {

@@ -73,19 +73,7 @@ const logIn = async (req, res) => {
 };
 
 const getUser = async (req, res) => {
-	const {id, email} = req.user;
-
-	let user;
-
-      if (email.includes("@")) {
-        user = await User.findOne({ email: email });
-      } else {
-        user = await User.findById(id);
-      }
-
-      if (!user) {
-        return res.status(404).json({ message: "User not found" });
-      }
+	const user = req.user;
 
       res.status(200).json({ user });
 };
@@ -132,7 +120,7 @@ const logout = async (req, res) => {
 
 const subscribe = async (req, res) => {
 	const { email } = req.body;
-	const user = User.findOne({ email });
+	const user = await User.findOne({ email });
 
 	if (!user) {
 		throw HttpError(400, "Missing required field email");
