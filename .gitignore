@@ -6,3 +6,5 @@ yarn.lock
 yarn.error
 node_modules/
 .DS_Store
+*.jpeg
+*.png
